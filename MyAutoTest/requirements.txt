@@ -1,6 +1,9 @@
-selenium~=4.5.0
-requests~=2.28.1
-PyYAML~=6.0
-pytest==7.2.0
-allure-pytest~=2.11.1
-ipython~=8.5.0
+selenium>=4.9.1
+requests>=2.31.0
+PyYAML>=6.0
+PyMySQL>=1.1.0
+pytest>=7.3.1
+pytest-check>=2.1.4
+allure-pytest>=2.13.2
+loguru>=0.4.1
+Jinjia2>=3.1.2
