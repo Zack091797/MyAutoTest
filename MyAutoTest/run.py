@@ -3,6 +3,7 @@ import inspect
 import os
 from time import sleep
 
+import jinja2
 import pytest
 
 

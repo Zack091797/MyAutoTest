@@ -1,9 +1,9 @@
 selenium>=4.9.1
 requests>=2.31.0
-PyYAML>=6.0
+PyYAML>=5.4.1
 PyMySQL>=1.1.0
 pytest>=7.3.1
 pytest-check>=2.1.4
 allure-pytest>=2.13.2
 loguru>=0.4.1
-Jinjia2>=3.1.2
+Jinja2>=3.1.2
