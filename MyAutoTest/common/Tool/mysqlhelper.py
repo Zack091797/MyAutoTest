@@ -8,7 +8,7 @@ class MySqlHelper:
         self.conn = None
         self.cursor = None
 
-    def connectMySQL(self):
+    def connectDB(self):
         try:
             self.conn = pymysql.connect(host=self._database_info.get("host", "127.0.0.1"),
                                         port=self._database_info.get("port", "3306"),
