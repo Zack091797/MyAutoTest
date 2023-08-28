@@ -258,7 +258,7 @@ class BasePage:
         :param png_name:
         :return:
         """
-        allure.attach(self.get_screenshot_as_png(), png_name, allure_attachment_type.PNG)
+        allure.attach(self.get_screenshot_as_png(), png_name, allure.attachment_type.PNG)
 
     # 下拉选择封装...
 
