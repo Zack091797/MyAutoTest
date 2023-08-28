@@ -1,3 +1,4 @@
+import allure
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -241,6 +242,23 @@ class BasePage:
         :return:
         """
         return self.driver.switch_to.alert
+
+    def get_screenshot_as_png(self):
+        """
+        浏览器截取当前屏幕画面存为png格式图片
+
+        :return:
+        """
+        return self.driver.get_screenshot_as_png()
+
+    def save_png_to_allure(self, png_name):
+        """
+        将当前浏览器页面截图存入allure报告
+
+        :param png_name:
+        :return:
+        """
+        allure.attach(self.get_screenshot_as_png(), png_name, allure_attachment_type.PNG)
 
     # 下拉选择封装...
 
