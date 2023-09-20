@@ -1,5 +1,6 @@
 from time import sleep
 
+import allure
 import pytest
 
 from selenium import webdriver

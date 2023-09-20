@@ -47,7 +47,7 @@ class LoguruHelper:
         return self.__logger
 
 
-loguHelper = LoguruHelper().logger
+loguHelper = LoguruHelper(log_file=True).logger
 
 
 

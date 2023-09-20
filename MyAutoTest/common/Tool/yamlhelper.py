@@ -10,7 +10,7 @@ class YamlHelper:
         pass
 
     def get_yaml_data(self, yaml_path) -> object:
-        with open(Path(Path.cwd(), yaml_path), mode="r") as f:
+        with open(Path(Path.cwd(), yaml_path), mode="r", encoding="utf-8") as f:
             value = yaml.safe_load(stream=f)
             return value
 
@@ -26,3 +26,6 @@ class YamlHelper:
         with open(Path(Path.cwd(), yaml_path), mode="w", encoding="utf-8") as f:
             res = Template(f.read()).safe_substitute(value)
             return yaml.safe_load(res)
+
+
+yamlHelper = YamlHelper()

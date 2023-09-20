@@ -46,11 +46,9 @@ class MySqlHelper:
     def close(self):
         if self.conn and self.cursor:
             self.cursor.close()
-            self.db.close()
+            self.conn.close()
         else:
             pass
 
-
-sqlHelper = MySqlHelper()
 
 
