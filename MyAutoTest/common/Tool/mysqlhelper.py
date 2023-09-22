@@ -43,6 +43,12 @@ class MySqlHelper:
     def update_data(self, sql):
         pass
 
+    def execute_sql_file(self, sql_file_path):
+        with open(sql_file_path, mode="r", encoding="utf-8") as f:
+            sql_script = f.read()
+            print(sql_script)
+            self.execute(sql_script)
+
     def close(self):
         if self.conn and self.cursor:
             self.cursor.close()
