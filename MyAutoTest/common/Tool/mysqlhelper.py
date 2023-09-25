@@ -1,4 +1,5 @@
 import pymysql
+from pymysql.constants import CLIENT
 
 
 class MySqlHelper:
@@ -16,6 +17,8 @@ class MySqlHelper:
                                         password=self._database_info.get("password", "root"),
                                         database=self._database_info.get("database", "mysql"),
                                         charset=self._database_info.get("charset", "utf8"),
+                                        cursorclass=pymysql.cursors.DictCursor,
+                                        client_flag=CLIENT.MULTI_STATEMENTS,
                                         connect_timeout=10)
             self.cursor = self.conn.cursor()
         except Exception as err:
