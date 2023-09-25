@@ -18,6 +18,7 @@ class MySqlHelper:
                                         database=self._database_info.get("database", "mysql"),
                                         charset=self._database_info.get("charset", "utf8"),
                                         cursorclass=pymysql.cursors.DictCursor,
+                                        # 标识符, 可执行多条sql, 缺少该参数时执行多语句sql会报错
                                         client_flag=CLIENT.MULTI_STATEMENTS,
                                         connect_timeout=10)
             self.cursor = self.conn.cursor()
