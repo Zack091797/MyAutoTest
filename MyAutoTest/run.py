@@ -29,4 +29,3 @@ if __name__ == "__main__":
 
     # sleep(3)
     # os.system("allure generate ./allure_result -o ./allure_reports --clean")
-

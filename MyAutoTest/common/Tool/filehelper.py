@@ -39,7 +39,7 @@ class FileHelper:
             print(err)
             raise
 
-    def create_folder_if_unexist(self, folder_path):
+    def create_folder_if_unexist(self, folder_path: str) -> None:
         try:
             if Path(folder_path).parent.exists():
                 pass

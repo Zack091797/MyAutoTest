@@ -1,9 +1,9 @@
 import re
 import pytest
 
-from MyAutoTest.common.API.apicase import ApiCase
-from MyAutoTest.common.LogConfig.LogConfig import logHelper
-from MyAutoTest.common.Tool.yamlhelper import yamlHelper
+from common.API.apicase import ApiCase
+from common.LogConfig.LogConfig import logHelper
+from common.Tool.yamlhelper import yamlHelper
 
 
 class TestApi(ApiCase):

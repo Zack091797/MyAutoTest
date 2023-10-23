@@ -1,6 +1,6 @@
 import pytest
 
-from MyAutoTest.common.API.requesthelper import RequestHelper
+from common.API.requesthelper import RequestHelper
 
 req = None
 
