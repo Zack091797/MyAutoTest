@@ -32,6 +32,7 @@ def closeSql():
 
 def pytest_configure(config: Config):
     # -- 为 pytest.ini配置 中的log_file日志文件命名添加日期
+    # hook读取配置的顺序，加载插件的顺序？
     log_file = config.inicfg.get("log_file", None)
     if log_file is not None:
         now = datetime.datetime.now()
