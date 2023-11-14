@@ -19,7 +19,7 @@ def all_functions():
     :return:
     """
     debug_module = importlib.import_module("debug")
-    all_function = inspect.getmembers(debug_module, inspect.isfunction())
+    all_function = inspect.getmembers(debug_module, inspect.isfunction)
     result = dict(all_function)
     return result
 
