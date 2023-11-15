@@ -1,6 +1,6 @@
 import re
-import pytest
 
+import pytest
 from common.API.apicase import ApiCase
 from common.LogConfig.LogConfig import logHelper
 from common.Tool.yamlhelper import yamlHelper
@@ -25,9 +25,9 @@ class TestApi(ApiCase):
         logHelper.info(f"请求使用的数据： {req_data}")
         logHelper.info(f"请求断言: {req_validate}")
 
-        result = req.request(req_method, req_url, req_data, headers=req_headers)
+        resp = req.request(req_method, req_url, req_data, headers=req_headers)
 
-        access_token = re.findall('"access_token":"(.*?)"', result.text)[0]
+        access_token = re.findall('"access_token":"(.*?)"', resp.text)[0]
         logHelper.info(f"获取的token： {access_token}")
 
         yamlHelper.set_yaml_data("./testdata/tmpdata.yaml", {"access_token": access_token})
