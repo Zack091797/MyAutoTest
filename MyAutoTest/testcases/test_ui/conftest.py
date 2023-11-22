@@ -13,7 +13,7 @@ browser_driver = None
 def initDriver():
     global browser_driver
     options = webdriver.ChromeOptions()
-    options.add_experimental_option("detach", True)  # 案例正常运行完成，不调用 quit() 浏览器不自动关闭
+    options.add_experimental_option("detach", True)  # 案例正常运行完成，不调用 quit() 浏览器则不自动关闭
     prefs = {'profile.default_content_settings.popups': 0, 'download.default_directory': 'C:\\Users\\Public\\Downloads'}
     options.add_experimental_option("prefs", prefs)
     browser_driver = webdriver.Chrome(options=options)
@@ -32,13 +32,6 @@ def closeBrowser():
         browser_driver = None
         logHelper.info("浏览器已关闭...")
     sleep(5)
-
-
-# @pytest.fixture(scope="session")
-# def initPages(driver):
-#     logHelper.info(f"页面对象实例化...")
-#     # loginPage = LoginPage()
-#     # return {"loginPage": loginPage}
 
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)

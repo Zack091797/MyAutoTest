@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 import datetime
 
@@ -6,30 +8,38 @@ from _pytest.config import Config
 from common.LogConfig.LogConfig import logHelper
 from common.Tool.mysqlhelper import MySqlHelper
 
-sqlHelper = None
-
-database_info = [{"host": "", "port": "", "user": "", "password": "", "database": "", "charset": ""}]
+db_list = []
 
 
-@pytest.fixture(scope="session", params=database_info, autouse=False)
-def connectSql(request):
-    global sqlHelper
-    sqlHelper = MySqlHelper(request.param)
-    sqlHelper.connectDB()
-    logHelper.info(f"数据库连接已打开...")
-    return sqlHelper
+@pytest.fixture(scope="class")
+def get_conn_database():
+    """
+    fixture工厂模式，建立数据库连接
+
+    :return:
+    """
+    global db_list
+
+    def _get_mysql_conn(database_info):
+        db = MySqlHelper()
+        db.connectDB(database_info)
+        db_list.append(db)
+        logHelper.info(f"成功连接数据库{db._database_info.get('database')}...")
+        return db
+
+    return _get_mysql_conn
 
 
-@pytest.fixture(scope="session", autouse=False)
-def closeSql():
+@pytest.fixture(scope="function")
+def disconn_database():
     yield
-    global sqlHelper
-    if sqlHelper is not None:
-        sqlHelper.close()
-        sqlHelper = None
-        logHelper.info("数据库连接已断开...")
+    global db_list
+    db = db_list[-1]
+    db.close()
+    logHelper.info(f"关闭连接数据库{db._database_info.get('database')}...")
 
 
+@pytest.hookimpl
 def pytest_configure(config: Config):
     # -- 为 pytest.ini配置 中的log_file日志文件命名添加日期
     # hook读取配置的顺序，加载插件的顺序？
@@ -52,6 +62,6 @@ def pytest_collection_modifyitems(session, config, items):
     :param items:
     :return:
     """
-    for item in items:
+    for index, item in enumerate(items):
         item.name = item.name.encode("utf-8").decode("unicode_escape")
         item._nodeid = item._nodeid.encode("utf-8").decode("unicode_escape")

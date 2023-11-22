@@ -4,15 +4,16 @@ from pymysql.constants import CLIENT
 
 class MySqlHelper:
 
-    def __init__(self, database_info):
-        self._database_info = database_info
+    def __init__(self):
+        self._database_info = None
         self.conn = None
         self.cursor = None
 
-    def connectDB(self):
+    def connectDB(self, database_info):
+        self._database_info = database_info
         try:
             self.conn = pymysql.connect(host=self._database_info.get("host", "127.0.0.1"),
-                                        port=self._database_info.get("port", "3306"),
+                                        port=self._database_info.get("port", 3306),
                                         user=self._database_info.get("user", "root"),
                                         password=self._database_info.get("password", "root"),
                                         database=self._database_info.get("database", "mysql"),

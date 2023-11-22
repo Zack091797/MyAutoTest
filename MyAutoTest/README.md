@@ -5,7 +5,7 @@
 2.引用pytest-check断言
 3.引用pytest-sugar终端运行进度条
 4.日志记录，使用pytest的logging
-5.
+5.数据库连接方式，在fixture中返回conn连接对象，每个用例
 
 api:
 1.接口api参数化 yaml文件作为数据模板，csv作为数据来源
