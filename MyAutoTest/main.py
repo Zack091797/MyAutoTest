@@ -1,24 +1,42 @@
-# This is a sample Python script.
+import copy
+import csv
+import importlib
+import inspect
+import json
+import os
 import re
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-from selenium import webdriver
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from pathlib import Path
+from typing import Union
+import jinja2
+import jsonpath
+import yaml
 
 
-# Press the green button in the gutter to run the script.
+def render(yml_path, **kwargs):
+    path, filename = os.path.split(yml_path)
+    return jinja2.Environment(loader=jinja2.FileSystemLoader(path or './')).get_template(filename).render(**kwargs)
+
+
+def all_functions():
+    """
+
+    :return:
+    """
+    debug_module = importlib.import_module("debug")
+    all_function = inspect.getmembers(debug_module, inspect.isfunction)
+    result = dict(all_function)
+    return result
+
+
 if __name__ == '__main__':
-    # print_hi('PyCharm')
-    driver = webdriver.Chrome()
-    driver.switch_to.parent_frame()
-    driver.switch_to.alert
-    driver.get_screenshot_as_png()
-    # str = "$csv{apiname}"
-    # result = re.findall("\\{(.*?)\\}", str)
-    # print(result)
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # r = render("./testdata/tmpdata.yaml", **all_functions())
+    # res = yaml.safe_load(r)
+    # print(res)
+    pass
+
+
+
+
+
+
+
