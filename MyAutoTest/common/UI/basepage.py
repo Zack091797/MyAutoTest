@@ -6,6 +6,10 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class BasePage:
 
+    """
+    基于Selenium的POM模式页面基类，封装各Selenium及自定义操作及方法，页面类继承此类。
+    业务用例中实例化各页面对象，调用组装页面实例对象的属性方法，实现业务场景操作。
+    """
     def __init__(self, driver):
         self.driver = driver
         self.action = ActionChains(self.driver)

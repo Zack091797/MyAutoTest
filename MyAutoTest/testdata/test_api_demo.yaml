@@ -1,9 +1,0 @@
-- name: 接口测试demo案例
-  request:
-    url: https://api.weixin.qq.com/cgi-bin/token
-    method: POST
-    data:
-      grant_type: client_credential
-      appid: wx74a8627810cfa308
-      secret: e40a02f9d79a8097df497e6aaf93ab80
-    validate: ${name}

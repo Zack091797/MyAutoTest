@@ -34,11 +34,11 @@ def closeBrowser():
     sleep(5)
 
 
-@pytest.fixture(scope="session")
-def initPages(driver):
-    logHelper.info(f"页面对象实例化...")
-    # loginPage = LoginPage()
-    # return {"loginPage": loginPage}
+# @pytest.fixture(scope="session")
+# def initPages(driver):
+#     logHelper.info(f"页面对象实例化...")
+#     # loginPage = LoginPage()
+#     # return {"loginPage": loginPage}
 
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)

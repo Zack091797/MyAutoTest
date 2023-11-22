@@ -54,7 +54,6 @@ class XlwingsHelper:
         :return:
         """
         self.workbook = self.app.books.open(file_path)
-        return self.workbook
 
     def save_excel_workbook(self, file_path=None):
         """
@@ -64,7 +63,7 @@ class XlwingsHelper:
         :return:
         """
         if file_path is None:
-            self.workbook.safve()
+            self.workbook.save()
         else:
             self.workbook.save(file_path)
 
@@ -111,5 +110,4 @@ class XlwingsHelper:
         :return:
         """
         self.sheet = self.workbook.sheets[sheet_name]
-
 

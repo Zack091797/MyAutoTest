@@ -1,14 +1,20 @@
+import json
 import re
 
+import jsonpath
 import pytest
+import pytest_check as check
 from common.API.apicase import ApiCase
 from common.LogConfig.LogConfig import logHelper
 from common.Tool.yamlhelper import yamlHelper
+from common.Tool.datahelper import dataHelper
 
 
 class TestApi(ApiCase):
+    """
 
-    @pytest.mark.parametrize("get_data", yamlHelper.get_yaml_data("./testdata/test_api_demo.yaml"))
+    """
+    @pytest.mark.parametrize("get_data", dataHelper.fromCsv2List("./testdata/test_api_get_token.csv"), indirect=True)
     def test_api_get_token(self, req, get_data, cache):
         req_name = get_data.get("name")
         req_method = get_data.get("request").get("method")
@@ -27,12 +33,33 @@ class TestApi(ApiCase):
 
         resp = req.request(req_method, req_url, req_data, headers=req_headers)
 
-        access_token = re.findall('"access_token":"(.*?)"', resp.text)[0]
-        logHelper.info(f"获取的token： {access_token}")
+        expires = None
+        try:
+            # jsonpath提取响应体expires_in
+            resp_dict = json.loads(resp.text)
+            expires = str(jsonpath.jsonpath(resp_dict, "$.expires_in")[0])
+        except TypeError:
+            logHelper.error(f"jsonpath未提取到目标值, 请检查响应详情!")
+        except IndexError:
+            logHelper.error(f"正则表达式未匹配到目标值, 请检查响应详情!")
+        finally:
+            pass
 
-        yamlHelper.set_yaml_data("./testdata/tmpdata.yaml", {"access_token": access_token})
-        cache.set("token", access_token)
-        cache.set("default_token", "")
+        access_token = None
+        try:
+            # 正则表达式提取响应体Token
+            access_token = re.findall('"access_token":"(.*?)"', resp.text)[0]
+            logHelper.info(f"获取的token： {access_token}")
+            yamlHelper.set_yaml_data("./testdata/tmpdata.yaml", {"access_token": access_token})
+            cache.set("token", access_token)
+            cache.set("default_token", "")
+        except IndexError:
+            logHelper.error(f"正则表达式未匹配到目标值, 请检查响应详情!")
+        finally:
+            pass
+
+        check.equal(req_validate, expires)
+        check.is_not_none(access_token)
 
     def test_api_show_token(self, cache):
         logHelper.info(f"cache取出的token: {cache.get('token', None)}")
