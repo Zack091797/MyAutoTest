@@ -4,10 +4,13 @@ import pytest
 import datetime
 
 from _pytest.config import Config
+from _pytest.config.argparsing import Parser
 
 from common.LogConfig.LogConfig import logHelper
 from common.Tool.mysqlhelper import MySqlHelper
+from config.ConfigHelper import ConfigHelper
 
+# 测试类实例化的数据库连接对象存入此列表，在测试类运行结束后断开连接
 db_list = []
 
 
@@ -30,13 +33,64 @@ def get_conn_database():
     return _get_mysql_conn
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="class")
 def disconn_database():
+    """
+    关闭测试类连接的数据库
+
+    :return:
+    """
     yield
     global db_list
-    db = db_list[-1]
-    db.close()
-    logHelper.info(f"关闭连接数据库{db._database_info.get('database')}...")
+    for index, db in enumerate(db_list):
+        db.close()
+        logHelper.info(f"关闭连接数据库{db._database_info.get('database')}...")
+
+
+@pytest.fixture(scope="session")
+def set_testing_env(get_envCode, get_sslCode):
+    configHelper = ConfigHelper("./config/env_config.ini")
+    if get_envCode == "dev":
+        base_url = configHelper.get_str("url settings", "dev_url")
+        base_port = configHelper.get_str("url settings", "dev_port")
+    elif get_envCode == "test":
+        base_url = configHelper.get_str("url settings", "test_url")
+        base_port = configHelper.get_str("url settings", "test_port")
+    else:
+        base_url = configHelper.get_str("url settings", "uat_url")
+        base_port = configHelper.get_str("url settings", "uat_port")
+    s = "" if get_sslCode == "False" else "s"
+    return f"http{s}://{base_url}:{base_port}"
+
+
+@pytest.fixture(scope="session")
+def get_envCode(request):
+    envCode = request.config.getoption("--envCode")
+    logHelper.info(f"当前测试环境 ---> {envCode}")
+    return envCode
+
+
+@pytest.fixture(scope="session")
+def get_sslCode(request):
+    sslCode = request.config.getoption("--sslCode")
+    logHelper.info(f"是否是ssl请求 ---> {sslCode}")
+    return sslCode
+
+
+@pytest.hookimpl
+def pytest_addoption(parser: Parser):
+    parser.addoption("--envCode",
+                     action="store",
+                     default="test",
+                     type=str,
+                     choices=["dev", "test", "uat"],
+                     help="代码环境参数，-dev开发环境，-test测试环境，-uat用户环境")
+    parser.addoption("--sslCode",
+                     action="store",
+                     default="False",
+                     type=str,
+                     choices=["True", "False"],
+                     help="是否作为https请求?默认为否False")
 
 
 @pytest.hookimpl

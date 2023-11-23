@@ -14,13 +14,13 @@ class TestApi(ApiCase):
     """
 
     """
-    @pytest.mark.parametrize("get_data", dataHelper.fromCsv2List("./testdata/test_api_get_token.csv"), indirect=True)
-    def test_api_get_token(self, req, get_data, cache):
-        req_name = get_data.get("name")
-        req_method = get_data.get("request").get("method")
-        req_url = get_data.get("request").get("url")
-        req_data = get_data.get("request").get("data")
-        req_validate = get_data.get("request").get("validate")
+    @pytest.mark.parametrize("get_api_data", dataHelper.fromCsv2List("./testdata/test_api_get_token.csv"), indirect=True)
+    def test_api_get_token(self, req, set_testing_env, get_api_data, cache):
+        req_name = get_api_data.get("name")
+        req_method = get_api_data.get("request").get("method")
+        req_url = set_testing_env + get_api_data.get("request").get("url")
+        req_data = get_api_data.get("request").get("data")
+        req_validate = get_api_data.get("request").get("validate")
 
         req_headers = {"content-type": "application/json"}
 

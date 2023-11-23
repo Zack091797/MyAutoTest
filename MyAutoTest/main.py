@@ -1,3 +1,4 @@
+import configparser
 import copy
 import csv
 import importlib
@@ -34,6 +35,11 @@ if __name__ == '__main__':
     # print(res)
     pass
 
+    config = configparser.ConfigParser()
+    config.read(Path(Path.cwd(), "./config/env_config.ini"))
+    dev_url = config.get("url settings", "dev_url")
+    dev_port = config.getint("url settings", "dev_port")
+    print(type(dev_url), type(dev_port))
 
 
 

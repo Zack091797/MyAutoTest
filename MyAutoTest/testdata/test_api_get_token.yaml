@@ -1,6 +1,6 @@
 - name: ${name}
   request:
-    url: https://api.weixin.qq.com/cgi-bin/token
+    url: /cgi-bin/token
     method: POST
     data:
       grant_type: client_credential

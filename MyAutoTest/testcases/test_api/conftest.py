@@ -17,7 +17,7 @@ def initRequest():
 
 
 @pytest.fixture(scope="function")
-def get_data(request):
+def get_api_data(request):
     api_name = request.node.originalname
     csv_data = request.param
     yml_model = yamlHelper.get_yaml_data(f"./testdata/{api_name}.yaml")[0]
