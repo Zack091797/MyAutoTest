@@ -4,23 +4,23 @@ import re
 import jsonpath
 import pytest
 import pytest_check as check
-from common.API.apicase import ApiCase
-from common.LogConfig.LogConfig import logHelper
-from common.Tool.yamlhelper import yamlHelper
-from common.Tool.datahelper import dataHelper
+from Utils.API.apicase import ApiCase
+from Utils.LogConfig.LogConfig import logHelper
+from Utils.Tool.yamlhelper import yamlHelper
+from Utils.Tool.datahelper import dataHelper
 
 
 class TestApi(ApiCase):
     """
 
     """
-    @pytest.mark.parametrize("get_api_data", dataHelper.fromCsv2List("./testdata/test_api_get_token.csv"), indirect=True)
-    def test_api_get_token(self, req, set_testing_env, get_api_data, cache):
-        req_name = get_api_data.get("name")
-        req_method = get_api_data.get("request").get("method")
-        req_url = set_testing_env + get_api_data.get("request").get("url")
-        req_data = get_api_data.get("request").get("data")
-        req_validate = get_api_data.get("request").get("validate")
+    @pytest.mark.parametrize("get_case_data", dataHelper.fromCsv2List("./testdata/test_api_get_token.csv"), indirect=True)
+    def test_api_get_token(self, req, set_testing_env, get_case_data, cache):
+        req_name = get_case_data.get("name")
+        req_method = get_case_data.get("request").get("method")
+        req_url = set_testing_env + get_case_data.get("request").get("url")
+        req_data = get_case_data.get("request").get("data")
+        req_validate = get_case_data.get("request").get("validate")
 
         req_headers = {"content-type": "application/json"}
 
@@ -31,7 +31,9 @@ class TestApi(ApiCase):
         logHelper.info(f"请求使用的数据： {req_data}")
         logHelper.info(f"请求断言: {req_validate}")
 
-        resp = req.request(req_method, req_url, req_data, headers=req_headers)
+        resp = req.request(method=req_method, url=req_url, params=req_data, headers=req_headers)
+
+        logHelper.info(f"响应信息:{resp.text}")
 
         expires = None
         try:

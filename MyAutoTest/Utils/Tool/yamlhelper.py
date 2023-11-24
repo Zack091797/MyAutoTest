@@ -11,7 +11,7 @@ class YamlHelper:
         pass
 
     def get_yaml_data(self, yaml_path: str, key: Union[str] = None, index: Union[int] = None,
-                      isOutsideDict=True) -> object:
+                      isOutsideDict=True) -> [dict, list]:
         """
         读取yaml文件
 
@@ -27,11 +27,11 @@ class YamlHelper:
                 return value
             elif key is not None and index is not None and isOutsideDict is False:
                 values = yaml.safe_load(stream=f)
-                value = values.get(index, "index对应的value不存在, 请检查index值!").get(key, "对应key的value不存在, 请检查key值!")
+                value = values[index].get(key, "对应key的value不存在, 请检查key值!")
                 return value
             elif key is not None and index is not None and isOutsideDict is True:
                 values = yaml.safe_load(stream=f)
-                value = values.get(key, "key对应的value不存在, 请检查key值!").get(index)
+                value = values.get(key, "key对应的value不存在, 请检查key值!")[index]
                 return value
             elif key is not None:
                 try:
@@ -43,10 +43,10 @@ class YamlHelper:
             elif index is not None:
                 try:
                     values = yaml.safe_load(stream=f)
-                    value = values.get(index, "index对应的value不存在, 请检查index值!")
+                    value = values[index]
                     return value
                 except Exception as err:
-                    print(err)
+                    print(f"index对应的value不存在, 请检查index值!:{err}")
 
     def set_yaml_data(self, yaml_path: str, value: Union[list, dict] = None):
         with open(Path(Path.cwd(), yaml_path), mode="a", encoding="utf-8") as f:

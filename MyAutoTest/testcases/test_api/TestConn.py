@@ -1,6 +1,6 @@
 import pytest
 
-from common.LogConfig.LogConfig import logHelper
+from Utils.LogConfig.LogConfig import logHelper
 
 
 @pytest.mark.usefixtures("disconn_database")

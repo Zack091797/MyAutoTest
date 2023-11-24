@@ -2,9 +2,9 @@ import copy
 
 import pytest
 
-from common.API.requesthelper import RequestHelper
-from common.Tool.datahelper import dataHelper
-from common.Tool.yamlhelper import yamlHelper
+from Utils.API.requesthelper import RequestHelper
+from Utils.Tool.datahelper import dataHelper
+from Utils.Tool.yamlhelper import yamlHelper
 
 req = None
 
@@ -17,14 +17,14 @@ def initRequest():
 
 
 @pytest.fixture(scope="function")
-def get_api_data(request):
+def get_case_data(request):
     api_name = request.node.originalname
     csv_data = request.param
-    yml_model = yamlHelper.get_yaml_data(f"./testdata/{api_name}.yaml")[0]
+    yml_model = yamlHelper.get_yaml_data(f"./testdata/{api_name}.yaml", index=0)
     test_data = dataHelper.parse_yml(yml_model, csv_data)
     return test_data
 
 
 @pytest.fixture(scope="class")
-def get_data_class(request):
+def get_class_data(request):
     module_name = request.module.__name__.rsplit(".", 1)[-1]

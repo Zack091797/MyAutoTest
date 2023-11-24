@@ -6,9 +6,9 @@ import datetime
 from _pytest.config import Config
 from _pytest.config.argparsing import Parser
 
-from common.LogConfig.LogConfig import logHelper
-from common.Tool.mysqlhelper import MySqlHelper
-from config.ConfigHelper import ConfigHelper
+from Utils.LogConfig.LogConfig import logHelper
+from Utils.Tool.mysqlhelper import MySqlHelper
+from Config.ConfigHelper import ConfigHelper
 
 # 测试类实例化的数据库连接对象存入此列表，在测试类运行结束后断开连接
 db_list = []
@@ -49,18 +49,20 @@ def disconn_database():
 
 @pytest.fixture(scope="session")
 def set_testing_env(get_envCode, get_sslCode):
-    configHelper = ConfigHelper("./config/env_config.ini")
+    configHelper = ConfigHelper("Config/env_config.ini")
     if get_envCode == "dev":
-        base_url = configHelper.get_str("url settings", "dev_url")
+        base_host = configHelper.get_str("url settings", "dev_host")
         base_port = configHelper.get_str("url settings", "dev_port")
     elif get_envCode == "test":
-        base_url = configHelper.get_str("url settings", "test_url")
+        base_host = configHelper.get_str("url settings", "test_host")
         base_port = configHelper.get_str("url settings", "test_port")
     else:
-        base_url = configHelper.get_str("url settings", "uat_url")
+        base_host = configHelper.get_str("url settings", "uat_host")
         base_port = configHelper.get_str("url settings", "uat_port")
     s = "" if get_sslCode == "False" else "s"
-    return f"http{s}://{base_url}:{base_port}"
+    base_url = f"http{s}://{base_host}:{base_port}" if base_port != "" else f"http{s}://{base_host}"
+    return base_url
+
 
 
 @pytest.fixture(scope="session")

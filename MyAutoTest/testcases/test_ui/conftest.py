@@ -4,7 +4,7 @@ import allure
 import pytest
 
 from selenium import webdriver
-from common.LogConfig.LogConfig import logHelper
+from Utils.LogConfig.LogConfig import logHelper
 
 browser_driver = None
 
