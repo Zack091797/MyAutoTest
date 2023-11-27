@@ -1,15 +1,17 @@
 import allure
+from selenium.common import WebDriverException
 from selenium.webdriver import ActionChains
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
 class BasePage:
-
     """
     基于Selenium的POM模式页面基类，封装各Selenium及自定义操作及方法，页面类继承此类。
     业务用例中实例化各页面对象，调用组装页面实例对象的属性方法，实现业务场景操作。
     """
+
     def __init__(self, driver):
         self.driver = driver
         self.action = ActionChains(self.driver)
@@ -26,7 +28,7 @@ class BasePage:
 
     def locates(self, loc: iter, index=None):
         """
-        定位组元素组，若index为None，则返回一组元素对象list；否则返回对应下标的单个元素对象
+        定位组元素，若index为None，则返回一组元素对象list；否则返回对应下标的单个元素对象
 
         :param loc: 列表或元组，包含定位方式和定位元素
         :param index: 定位组元素对象的子元素对象，默认为None
@@ -55,7 +57,7 @@ class BasePage:
         """
         self.locate(loc).click()
 
-    def input_element(self, loc, content):
+    def input_element(self, loc: iter, content: str):
         """
         在元素上输入文本内容content
 
@@ -67,7 +69,7 @@ class BasePage:
 
     def wait_condition(self, until_or_not, EC, *args, **kwargs):
         """
-        显示等待条件
+        显示等待条件, 未封装完
 
         :param until_or_not:
         :param EC:
@@ -80,6 +82,20 @@ class BasePage:
         elif until_or_not == "until_not":
             self.wait.until_not()
 
+    def set_obviously_wait(self, implicitly_time=10):
+        """
+        设置显示等待之前需要关闭全局隐式等待，完成之后再重新设置隐式等待
+
+        :return:
+        """
+        try:
+            self.set_implicitly_wait(0)
+            self.wait_condition()
+        except WebDriverException as err:
+            raise err
+        finally:
+            self.set_implicitly_wait(implicitly_time)
+
     def set_implicitly_wait(self, wait_time=10):
         """
         设置隐式等待，默认10s
@@ -88,6 +104,24 @@ class BasePage:
         :return:
         """
         self.driver.implicitly_wait(wait_time)
+
+    def set_scripts_timeout(self, timeout=15):
+        """
+        设置异步脚本等待超时时间
+
+        :param timeout:
+        :return:
+        """
+        self.driver.set_script_timeout(timeout)
+
+    def set_pages_load_timeout(self, timeout=20):
+        """
+        设置页面加载超时时间
+
+        :param timeout:
+        :return:
+        """
+        self.driver.set_page_load_timeout(timeout)
 
     def move_above_element(self, loc):
         """
@@ -115,10 +149,55 @@ class BasePage:
         self.action.reset_actions()
 
     def get_title(self):
+        """
+        获取当前页面标题
+
+        :return:
+        """
         return self.driver.title
 
+    def get_current_url(self):
+        """
+        获取当前页面url
+
+        :return:
+        """
+        return self.driver.current_url
+
+    def get_browser_name(self):
+        """
+        获取当前浏览器名称
+
+        :return:
+        """
+        return self.driver.name
+
+    def get_page_source(self):
+        """
+        获取当前页面源码
+
+        :return:
+        """
+        return self.driver.page_source
+
     def get_text(self, loc):
+        """
+        获取指定元素文本
+
+        :param loc:
+        :return:
+        """
         return self.locate(loc).text
+
+    def get_element_attribute(self, loc, attr):
+        """
+        返回指定元素的指定属性
+
+        :param loc:
+        :param attr:
+        :return:
+        """
+        return self.locate(loc).get_attribute(attr)
 
     def do_js(self, script):
         """
@@ -156,6 +235,17 @@ class BasePage:
         :return:
         """
         self.driver.do_js((f"arguments[0].removeAttribute({attr})", self.locate(loc)))
+
+    def js_change_attribute(self, loc, attr, new_value):
+        """
+        js修改元素属性
+
+        :param loc:
+        :param attr:
+        :param new_value:
+        :return:
+        """
+        self.driver.do_js(f"arguments[0].{attr}={new_value}", self.locate(loc))
 
     def js_scroll_into_view(self, loc):
         """
@@ -207,7 +297,7 @@ class BasePage:
         :param index:
         :return:
         """
-        handles = self.get_window_handles()
+        handles = self.get_all_window_handles()
         self.driver.switch_to.window(handles[index])
 
     def switch_iframe(self, loc):
@@ -247,7 +337,7 @@ class BasePage:
         """
         return self.driver.switch_to.alert
 
-    def get_screenshot_as_png(self):
+    def get_screenshots_as_png(self):
         """
         浏览器截取当前屏幕画面存为png格式图片
 
@@ -262,13 +352,8 @@ class BasePage:
         :param png_name:
         :return:
         """
-        allure.attach(self.get_screenshot_as_png(), png_name, allure.attachment_type.PNG)
+        allure.attach(self.get_screenshots_as_png(), png_name, allure.attachment_type.PNG)
 
     # 下拉选择封装...
-
-
-
-
-
-
-
+    def select_by_index(self):
+        pass

@@ -93,6 +93,12 @@ def pytest_addoption(parser: Parser):
                      type=str,
                      choices=["True", "False"],
                      help="是否作为https请求?默认为否False")
+    # parser.addoption("--testType",
+    #                  action="store",
+    #                  default="api",
+    #                  type=str,
+    #                  choices=["api", "ui"],
+    #                  help="判断测试类型")
 
 
 @pytest.hookimpl

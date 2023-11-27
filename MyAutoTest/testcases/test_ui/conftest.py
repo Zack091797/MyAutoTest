@@ -14,16 +14,18 @@ def initDriver():
     global browser_driver
     options = webdriver.ChromeOptions()
     options.add_experimental_option("detach", True)  # 案例正常运行完成，不调用 quit() 浏览器则不自动关闭
+    options.add_experimental_option("excludeSwitches", ["enable-automation"]) # 去掉受自动化控制抬头
+    options.add_experimental_option("useAutomationExtension", False) # 去掉受自动化控制抬头
     prefs = {'profile.default_content_settings.popups': 0, 'download.default_directory': 'C:\\Users\\Public\\Downloads'}
     options.add_experimental_option("prefs", prefs)
     browser_driver = webdriver.Chrome(options=options)
     browser_driver.maximize_window()
-    browser_driver.implicitly_wait(10)
+    browser_driver.implicitly_wait(10)  # 全局隐式等待
     logHelper.info(f"浏览器初始化完毕...")
     return browser_driver
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 def closeBrowser():
     yield
     global browser_driver
