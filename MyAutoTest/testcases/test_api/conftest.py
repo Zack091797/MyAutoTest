@@ -18,9 +18,9 @@ def initRequest():
 
 @pytest.fixture(scope="function")
 def get_case_data(request):
-    api_name = request.node.originalname
     csv_data = request.param
-    yml_model = yamlHelper.get_yaml_data(f"./testdata/{api_name}.yaml", index=0)
+    api_name = request.node.originalname
+    yml_model = yamlHelper.get_yml_data(f"./testdata/{api_name}.yaml", index=0)
     test_data = dataHelper.parse_yml(yml_model, csv_data)
     return test_data
 

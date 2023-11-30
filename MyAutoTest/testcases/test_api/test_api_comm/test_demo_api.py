@@ -15,10 +15,10 @@ class TestApi(ApiCase):
 
     """
     @pytest.mark.parametrize("get_case_data", dataHelper.fromCsv2List("./testdata/test_api_get_token.csv"), indirect=True)
-    def test_api_get_token(self, req, set_testing_env, get_case_data, cache):
+    def test_api_get_token(self, req, base_url, get_case_data, cache):
         req_name = get_case_data.get("name")
         req_method = get_case_data.get("request").get("method")
-        req_url = set_testing_env + get_case_data.get("request").get("url")
+        req_url = base_url + get_case_data.get("request").get("url")
         req_data = get_case_data.get("request").get("data")
         req_validate = get_case_data.get("request").get("validate")
 
@@ -52,7 +52,7 @@ class TestApi(ApiCase):
             # 正则表达式提取响应体Token
             access_token = re.findall('"access_token":"(.*?)"', resp.text)[0]
             logHelper.info(f"获取的token： {access_token}")
-            yamlHelper.set_yaml_data("./testdata/tmpdata.yaml", {"access_token": access_token})
+            yamlHelper.set_yml_data("./testdata/tmpdata.yaml", {"access_token": access_token})
             cache.set("token", access_token)
             cache.set("default_token", "")
         except IndexError:
@@ -65,4 +65,4 @@ class TestApi(ApiCase):
 
     def test_api_show_token(self, cache):
         logHelper.info(f"cache取出的token: {cache.get('token', None)}")
-        logHelper.info(f"yaml取出的token: {yamlHelper.get_yaml_data('./testdata/tmpdata.yaml', key='access_token')}")
+        logHelper.info(f"yaml取出的token: {yamlHelper.get_yml_data('./testdata/tmpdata.yaml', key='access_token')}")

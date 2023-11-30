@@ -67,20 +67,78 @@ class BasePage:
         """
         self.locate(loc).send_keys(content)
 
-    def wait_condition(self, until_or_not, EC, *args, **kwargs):
+    def wait_condition(self, ConditionType: int, until_or_not: bool = True, *args, **kwargs):
         """
-        显示等待条件, 未封装完
+        显示等待条件,
 
+        0 判断 title 是否等于预期 value
+
+        1 判断 title 是否包含预期 value
+
+        2 判断元素是否被加载到 dom 树，不代表元素一定可见
+
+        3 判断元素是否可见，传入 locator，可见代表元素非隐藏，宽高都不等于0
+
+        4 判断元素是否可见，传入 webelement
+
+        5 判断元素是否不存在于 dom 树或不可见
+
+        6 判断元素的 text 是否包含预期 value
+
+        7 判断元素的 value 属性是否包含预期 value
+
+        8 判断 frame 是否可以 switch 切换进入，True 则切换进入，反之 False
+
+        9 判断元素可见且可点击
+
+        10 判断元素不可点击
+
+        11 判断元素
+
+
+        :param ConditionType:
         :param until_or_not:
-        :param EC:
         :param args:
         :param kwargs:
         :return:
         """
-        if until_or_not == "until":
-            self.wait.until()
-        elif until_or_not == "until_not":
-            self.wait.until_not()
+        value = kwargs.get("value", "可变形参未传入value!!!")
+        match ConditionType:
+            case 0:
+                if until_or_not is True:
+                    self.wait.until(EC.title_is(value), f"页面title与{value}不匹配!!!")
+                else:
+                    self.wait.until_not(EC.title_is(value), f"页面标题仍是{value}!!!")
+            case 1:
+                if until_or_not is True:
+                    self.wait.until(EC.title_contains(value), f"页面title不包含{value}!!!")
+                else:
+                    self.wait.until_not(EC.title_contains(value), f"页面title仍包含{value}!!!")
+            case 2:
+                if until_or_not is True:
+                    self.wait.until()
+                else:
+                    self.wait.until_not()
+            case 3:
+                if until_or_not is True:
+                    self.wait.until()
+                else:
+                    self.wait.until_not()
+            case 4:
+                if until_or_not is True:
+                    self.wait.until()
+                else:
+                    self.wait.until_not()
+            case 5:
+                if until_or_not is True:
+                    self.wait.until()
+                else:
+                    self.wait.until_not()
+            case 6:
+                if until_or_not is True:
+                    self.wait.until()
+                else:
+                    self.wait.until_not()
 
     def set_obviously_wait(self, implicitly_time=10):
         """

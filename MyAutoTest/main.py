@@ -5,18 +5,19 @@ import os
 from time import sleep
 
 import jinja2
+import yaml
+from jinja2 import Template
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-
-def render(yml_path, **kwargs):
-    path, filename = os.path.split(yml_path)
-    return jinja2.Environment(loader=jinja2.FileSystemLoader(path or './')).get_template(filename).render(**kwargs)
+from Utils.Tool.render_template_jinja2 import render_template_by_jinja2
+from Utils.Tool.yamlhelper import yamlHelper
 
 
 def all_functions():
     """
+    读取 debug 模块下的所有function
 
     :return:
     """
@@ -27,18 +28,17 @@ def all_functions():
 
 
 if __name__ == '__main__':
-    # r = render("./testdata/tmpdata.yaml", **all_functions())
-    # res = yaml.safe_load(r)
-    # print(res)
-    pass
-    driver = webdriver.Chrome()
-    driver.maximize_window()
-    driver.implicitly_wait(5)
-    driver.get("https://baidu.com")
-    driver.implicitly_wait(0)
-    wait = WebDriverWait(driver, 10)
-    print(driver.timeouts.implicit_wait)
-    hs = driver.find_element("xpath", "//*[@id='s-user-setting-menu']/div/a[2]/span")
-    wait.until(EC.visibility_of, ("xpath", "//*[@id='s-user-setting-menu']/div/a[2]/span"))
-    # high_search = driver.find_element(("xpath", "//*[@id='s-user-setting-menu']/div/a[2]/span"))
-    sleep(20)
+
+    fun = all_functions()
+    fun.update({"name": "Customer"})
+
+    t_temp = yamlHelper.get_yml_data("./testdata/tmpdata.yaml")
+    t = render_template_by_jinja2(t_temp, **fun)
+    # t = render_template_by_jinja2(t_temp, fun.get("get_random"))
+    # t = render_template_by_jinja2(t_temp, fun.get("get_name_and_age"))
+    print(t)
+
+
+    # 1.yaml定义用例模板，test用例需要有校验必填字段的方法 -- jsonschma定义，入参和出参
+    # 2.yaml利用模板调用python方法
+    # 3.yaml文件直接作为测试用例

@@ -26,6 +26,7 @@ def all_functions():
 
 if __name__ == "__main__":
     # pytest.main(["./testcases/test_api/test_api_demo.py", "--envCode", "dev", "--sslCode", "True"])
-    pytest.main(["./testcases/test_ui/test_ui_demo.py", "--envCode", "dev", "--sslCode", "True"])
+    # pytest.main(["./testcases/test_ui/test_ui_demo.py", "--envCode", "dev", "--sslCode", "True"])
+    pytest.main(["./testcases/test_api/test_api_yml"])
     # sleep(3)
     # os.system("allure generate ./allure_result -o ./allure_reports --clean")
