@@ -2,6 +2,8 @@ import importlib
 import inspect
 import json
 import os
+import types
+from pathlib import Path
 from time import sleep
 
 import jinja2
@@ -11,6 +13,7 @@ from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
+import debug
 from Utils.Tool.render_template_jinja2 import render_template_by_jinja2
 from Utils.Tool.yamlhelper import yamlHelper
 
@@ -28,15 +31,7 @@ def all_functions():
 
 
 if __name__ == '__main__':
-
-    fun = all_functions()
-    fun.update({"name": "Customer"})
-
-    t_temp = yamlHelper.get_yml_data("./testdata/tmpdata.yaml")
-    t = render_template_by_jinja2(t_temp, **fun)
-    # t = render_template_by_jinja2(t_temp, fun.get("get_random"))
-    # t = render_template_by_jinja2(t_temp, fun.get("get_name_and_age"))
-    print(t)
+    pass
 
 
     # 1.yaml定义用例模板，test用例需要有校验必填字段的方法 -- jsonschma定义，入参和出参

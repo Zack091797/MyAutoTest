@@ -4,7 +4,7 @@ from Utils.LogConfig.LogConfig import logHelper
 
 
 @pytest.mark.usefixtures("disconn_database")
-class TestTool:
+class TestConn:
 
     def test_query_open_follow(self, get_conn_database):
         mysql_info = {"host": "192.168.144.240", "port": 15202, "user": "ubsp_customer", "password": "swhy1234",

@@ -7,6 +7,7 @@ import pytest
 from _pytest.config import Config
 from _pytest.config.argparsing import Parser
 
+from Utils.API.http_session import HttpSession
 from Utils.LogConfig.LogConfig import logHelper
 from Utils.Tool.mysqlhelper import MySqlHelper
 from Config.ConfigHelper import ConfigHelper
@@ -16,6 +17,13 @@ pytest_plugins = ["config_plugins", "case_plugins"]
 
 # 测试类实例化的数据库连接对象存入此列表，在测试类运行结束后断开连接
 db_list = []
+
+@pytest.fixture()
+def request_session():
+    rs = HttpSession()
+    return rs
+
+
 
 
 @pytest.fixture(scope="class")
