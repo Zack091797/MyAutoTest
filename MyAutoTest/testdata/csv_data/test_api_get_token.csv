@@ -1,3 +1,3 @@
-name,appid,secret,validate
+step,appid,secret,validate
 demo正例,wx74a8627810cfa308,e40a02f9d79a8097df497e6aaf93ab80,7200
 demo反例,wx74a8627810cfa328,e40a02f9d79a8097df497e6aaf93ab60,7200

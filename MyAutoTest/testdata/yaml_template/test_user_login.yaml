@@ -1,0 +1,12 @@
+- step: 获取登录token-${step1_name}
+  request:
+    url: http://192.168.27.43:98/user/v1/login
+    method: POST
+    data:
+      userName: ${userName}
+      passWord: ${passWord}
+      verifyInfo: ${verifyInfo}
+      loginType: ${loginType}
+    validate:
+      code: ${loginCode}
+      msg: ${loginMsg}

@@ -1,0 +1,10 @@
+- step: 查询客户适应性-${step2_name}
+  request:
+    url: http://192.168.25.210:8006/business/v1/product/suitable/check
+    method: POST
+    data:
+      taCode: ${taCode}
+      ofCode: ${ofCode}
+    validate:
+      code: ${adaptCode}
+      msg: ${adaptMsg}

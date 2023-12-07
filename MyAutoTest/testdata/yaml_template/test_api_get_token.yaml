@@ -1,4 +1,4 @@
-- name: ${name}
+- step: 获取微信小程序token-${step}
   request:
     url: /cgi-bin/token
     method: POST

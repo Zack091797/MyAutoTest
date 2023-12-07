@@ -35,6 +35,7 @@ def render_template_str_by_jinja2(t_str, *args, **kwargs):
     result = t.render(*args, **kwargs)
     if t_str.startswith("${") and t_str.endswith("}"):
         try:
+            # 检索字符串开头结尾是${ }, 则try执行内部表达式或函数
             # eval函数执行字符串中有效的表达式，并返回结果；
             # 将字符串转换成相应的对象(list、tuple、dict和string之间)；
             # 将利用反引号转换的字符串再反转回对象

@@ -10,17 +10,20 @@ from Utils.Tool.yamlhelper import yamlHelper
 from Utils.Tool.datahelper import dataHelper
 
 
+@pytest.mark.parametrize("get_test_data", dataHelper.fromCsv2List("./testdata/csv_data/test_api_get_token.csv"),
+                         indirect=True)
 class TestApi(ApiCase):
     """
 
     """
-    @pytest.mark.parametrize("get_case_data", dataHelper.fromCsv2List("./testdata/csv_data/test_api_get_token.csv"), indirect=True)
-    def test_api_get_token(self, req, base_url, get_case_data, cache):
-        req_name = get_case_data.get("name")
-        req_method = get_case_data.get("request").get("method")
-        req_url = base_url + get_case_data.get("request").get("url")
-        req_data = get_case_data.get("request").get("data")
-        req_validate = get_case_data.get("request").get("validate")
+
+    def test_api_get_token(self, req, base_url, get_test_data, cache):
+        test_data = get_test_data(self.test_api_get_token.__name__)
+        req_name = test_data.get("step")
+        req_method = test_data.get("request").get("method")
+        req_url = base_url + test_data.get("request").get("url")
+        req_data = test_data.get("request").get("data")
+        req_validate = test_data.get("request").get("validate")
         req_headers = {"content-type": "application/json"}
 
         logHelper.info(f"请求名称: {req_name}\n"
@@ -60,7 +63,6 @@ class TestApi(ApiCase):
         check.equal(req_validate, expires)
         check.is_not_none(access_token)
 
-    def test_api_show_token(self, cache):
+    def test_api_show_token(self, get_test_data, cache):
         logHelper.info(f"cache取出的token: {cache.get('token', None)}")
         logHelper.info(f"yaml取出的token: {yamlHelper.get_yml_data('./testdata/tmpdata.yaml', key='access_token')}")
-

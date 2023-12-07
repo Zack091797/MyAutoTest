@@ -1,11 +1,5 @@
-import copy
-import importlib
-import inspect
-
 import pytest
-
 from Utils.API.requesthelper import RequestHelper
-from Utils.Tool.datahelper import dataHelper
 from Utils.Tool.render_template_jinja2 import render_template_by_jinja2
 from Utils.Tool.yamlhelper import yamlHelper
 
@@ -15,22 +9,24 @@ from Utils.Tool.yamlhelper import yamlHelper
 req = None
 
 
-@pytest.fixture(scope="function")
-def get_case_data(request, debug_talk):
-    csv_data = request.param
-    csv_data.update(debug_talk)
-    api_name = request.node.originalname
-    yml_model = yamlHelper.get_yml_data(f"./testdata/yaml_model/{api_name}.yaml", index=0)
-    test_data = render_template_by_jinja2(yml_model, csv_data)
-    return test_data
-
-
 @pytest.fixture(scope="class")
-def get_class_data(request, debug_talk):
+def get_test_data(request, debug_talk):
+    """
+    fixture工厂方法，生成测试数据
+
+    :param request:
+    :param debug_talk:
+    :return:
+    """
     csv_data = request.param
     csv_data.update(debug_talk)
-    module_name = request.module.__name__.rsplit(".", 1)[-1]
-    yml_model = yamlHelper.get_yml_data(f"./testdata/yaml_model/{module_name}.yaml", index=0)
+
+    def _render_template(template_name: str):
+        yaml_template = yamlHelper.get_yml_data(f"./testdata/yaml_template/{template_name}.yaml", index=0)
+        test_data = render_template_by_jinja2(yaml_template, **csv_data)
+        return test_data
+
+    return _render_template
 
 
 @pytest.fixture(scope="session", name="req")
