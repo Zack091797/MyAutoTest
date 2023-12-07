@@ -6,4 +6,5 @@
       grant_type: client_credential
       appid: ${appid}
       secret: ${secret}
+      random_d: ${get_random()}
     validate: ${validate}

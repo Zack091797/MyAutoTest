@@ -2,7 +2,7 @@ import requests
 import re
 from requests import Response
 
-from MyException import ParserError
+from yml_as_case.MyException import ParserError
 
 
 #

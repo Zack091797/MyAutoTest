@@ -1,37 +1,26 @@
 import importlib
 import inspect
-import json
-import os
-import types
 from pathlib import Path
-from time import sleep
 
-import jinja2
-import yaml
-from jinja2 import Template
-from selenium import webdriver
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
-
-import debug
+from Utils.Tool.datahelper import dataHelper
 from Utils.Tool.render_template_jinja2 import render_template_by_jinja2
 from Utils.Tool.yamlhelper import yamlHelper
 
 
-def all_functions():
-    """
-    读取 debug 模块下的所有function
-
-    :return:
-    """
-    debug_module = importlib.import_module("debug")
-    all_function = inspect.getmembers(debug_module, inspect.isfunction)
-    result = dict(all_function)
-    return result
-
-
 if __name__ == '__main__':
     pass
+    # prefix = random.choice(['6227', '6222', "6228", '6216'])
+    # check_code = random.randint(0, 9)
+    # digits = random.randint(10000000000000, 99999999999999)
+    # card_number = prefix+str(check_code)+str(digits)
+    # if prefix == "6227":
+    #     print(f"建设银行:{card_number}")
+    # elif prefix == "6228":
+    #     print(f"农业银行:{card_number}")
+    # elif prefix == "6222":
+    #     print(f"工商银行:{card_number}")
+    # else:
+    #     print(f"中国银行:{card_number}")
 
 
     # 1.yaml定义用例模板，test用例需要有校验必填字段的方法 -- jsonschma定义，入参和出参
