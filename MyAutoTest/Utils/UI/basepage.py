@@ -1,9 +1,8 @@
 import allure
 from selenium.common import WebDriverException
 from selenium.webdriver import ActionChains
-from selenium.webdriver.support.select import Select
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class BasePage:

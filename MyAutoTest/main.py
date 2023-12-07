@@ -1,10 +1,7 @@
 import importlib
 import inspect
-from pathlib import Path
 
-from Utils.Tool.datahelper import dataHelper
 from Utils.Tool.render_template_jinja2 import render_template_by_jinja2
-from Utils.Tool.yamlhelper import yamlHelper
 
 
 def all_functions():
@@ -17,6 +14,7 @@ def all_functions():
     all_function = inspect.getmembers(debug_module, inspect.isfunction)
     result = dict(all_function)
     return result
+
 
 if __name__ == '__main__':
     pass
@@ -33,10 +31,6 @@ if __name__ == '__main__':
     t = render_template_by_jinja2(t_str, t_temp)
     print(t)
 
-
-
-
-
     # prefix = random.choice(['6227', '6222', "6228", '6216'])
     # check_code = random.randint(0, 9)
     # digits = random.randint(10000000000000, 99999999999999)
@@ -49,7 +43,6 @@ if __name__ == '__main__':
     #     print(f"工商银行:{card_number}")
     # else:
     #     print(f"中国银行:{card_number}")
-
 
     # 1.yaml定义用例模板，test用例需要有校验必填字段的方法 -- jsonschma定义，入参和出参
     # 2.yaml利用模板调用python方法

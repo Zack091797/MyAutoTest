@@ -1,4 +1,4 @@
-from locust import FastHttpUser, HttpUser, task, SequentialTaskSet, TaskSet
+from locust import FastHttpUser, task, SequentialTaskSet
 
 
 class UserTasks(SequentialTaskSet):

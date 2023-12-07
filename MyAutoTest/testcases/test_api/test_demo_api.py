@@ -4,10 +4,11 @@ import re
 import jsonpath
 import pytest
 import pytest_check as check
+
 from Utils.API.apicase import ApiCase
 from Utils.LogConfig.LogConfig import logHelper
-from Utils.Tool.yamlhelper import yamlHelper
 from Utils.Tool.datahelper import dataHelper
+from Utils.Tool.yamlhelper import yamlHelper
 
 
 @pytest.mark.parametrize("get_test_data", dataHelper.fromCsv2List("./testdata/csv_data/test_api_get_token.csv"),

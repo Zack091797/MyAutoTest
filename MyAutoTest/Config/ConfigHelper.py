@@ -26,5 +26,3 @@ class ConfigHelper:
 
     def add_section(self, sec):
         self.config.add_section(section=sec)
-
-

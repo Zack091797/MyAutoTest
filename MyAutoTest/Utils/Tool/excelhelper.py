@@ -110,4 +110,3 @@ class XlwingsHelper:
         :return:
         """
         self.sheet = self.workbook.sheets[sheet_name]
-

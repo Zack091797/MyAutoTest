@@ -1,8 +1,8 @@
+from pathlib import *
 from string import Template
-from typing import Optional, Union
+from typing import Union
 
 import yaml
-from pathlib import *
 
 
 class YamlHelper:

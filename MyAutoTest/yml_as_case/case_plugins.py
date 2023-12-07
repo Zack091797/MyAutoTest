@@ -1,26 +1,10 @@
-import inspect
-import re
-import sys
-import types
-from inspect import Parameter, Signature
 from pathlib import Path
-import pytest_check as check_assert
 
-import jmespath
-import jsonpath
 import pytest
 import yaml
-from _pytest import config
-from _pytest.config import Config
-from _pytest.python import Module, path_matches_patterns
-from pytest_check import check_functions
-from requests import Response
+from _pytest.python import path_matches_patterns
 
-import debugtalk
-from MyException import ExtractExpressError, ParserError
 from Utils.LogConfig.LogConfig import logHelper
-from Utils.Tool.render_template_jinja2 import render_template_by_jinja2
-from dynamic_create_function import create_function_from_parameters
 
 """
 pytest中将 session、package、module、class、instance、function包装成了

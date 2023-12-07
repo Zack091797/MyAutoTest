@@ -1,6 +1,7 @@
 import datetime
-import pytest
 from pathlib import Path
+
+import pytest
 from _pytest.config import Config
 
 

@@ -60,6 +60,3 @@ class MySqlHelper:
             self.conn.close()
         else:
             pass
-
-
-

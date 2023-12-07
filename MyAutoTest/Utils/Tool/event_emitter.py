@@ -2,6 +2,7 @@ class EventEmitter:
     """
     回调函数应用示例，无实际应用
     """
+
     def __init__(self):
         self.callbacks = []
 
@@ -15,7 +16,6 @@ class EventEmitter:
 
 def callback_function(message):
     print("Received message:", message)
-
 
 
 event_emitter = EventEmitter()

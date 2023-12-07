@@ -1,5 +1,6 @@
-import requests
 import re
+
+import requests
 from requests import Response
 
 from yml_as_case.MyException import ParserError

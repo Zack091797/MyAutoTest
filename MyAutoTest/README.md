@@ -1,4 +1,5 @@
 # MyAutoTest
+
 集成接口和UI自动化测试框架
 框架：
 1.引用allure报告
@@ -13,12 +14,6 @@ api:
 
 UI：
 1.PO的基类basepage，大部分已封装
-
-
-
-
-
-
 
 修改源码：
 1.\site-packages\_pytest\logging.py 579 修改文件的读写模式覆写"w"变更为追加读写"a+"

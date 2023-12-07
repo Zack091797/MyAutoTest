@@ -2,8 +2,8 @@ from time import sleep
 
 import allure
 import pytest
-
 from selenium import webdriver
+
 from Utils.LogConfig.LogConfig import logHelper
 
 browser_driver = None
@@ -14,8 +14,8 @@ def initDriver():
     global browser_driver
     options = webdriver.ChromeOptions()
     options.add_experimental_option("detach", True)  # 案例正常运行完成，不调用 quit() 浏览器则不自动关闭
-    options.add_experimental_option("excludeSwitches", ["enable-automation"]) # 去掉受自动化控制抬头
-    options.add_experimental_option("useAutomationExtension", False) # 去掉受自动化控制抬头
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])  # 去掉受自动化控制抬头
+    options.add_experimental_option("useAutomationExtension", False)  # 去掉受自动化控制抬头
     prefs = {'profile.default_content_settings.popups': 0, 'download.default_directory': 'C:\\Users\\Public\\Downloads'}
     options.add_experimental_option("prefs", prefs)
     browser_driver = webdriver.Chrome(options=options)
@@ -46,4 +46,3 @@ def pytest_runtest_makereport(item, call):
     elif report.when == "call" and report.failed:
         if hasattr(browser_driver, "get_screenshot_as_png"):
             allure.attach(browser_driver.get_screen_as_png(), "页面操作错误", allure.attachment_type.PNG)
-

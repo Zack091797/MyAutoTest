@@ -1,4 +1,3 @@
-from selenium import webdriver
 from time import sleep
 
 from UI_Objects.Baidu_DEMO.Baidu_Home import BaiDu_Home_Page
