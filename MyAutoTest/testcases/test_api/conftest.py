@@ -26,21 +26,11 @@ def get_case_data(request, debug_talk):
 
 
 @pytest.fixture(scope="class")
-def get_class_data(request):
+def get_class_data(request, debug_talk):
+    csv_data = request.param
+    csv_data.update(debug_talk)
     module_name = request.module.__name__.rsplit(".", 1)[-1]
-
-
-@pytest.fixture(scope="session")
-def debug_talk():
-    """
-    读取 debugtalk 模块下的所有function，return一个内置function对象的dict
-
-    :return:
-    """
-    debug_module = importlib.import_module("debugtalk")
-    all_function = inspect.getmembers(debug_module, inspect.isfunction)
-    result = dict(all_function)
-    return result
+    yml_model = yamlHelper.get_yml_data(f"./testdata/yaml_model/{module_name}.yaml", index=0)
 
 
 @pytest.fixture(scope="session", name="req")

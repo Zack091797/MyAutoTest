@@ -1,3 +1,6 @@
+import importlib
+import inspect
+
 import pytest
 
 from _pytest.config.argparsing import Parser
@@ -58,6 +61,19 @@ def base_url(request):
     else:
         base_url = configHelper.get_str("url settings", "uat_url")
     return base_url
+
+
+@pytest.fixture(scope="session")
+def debug_talk():
+    """
+    读取 debugtalk 模块下的所有function，return一个内置function对象的dict
+
+    :return:
+    """
+    debug_module = importlib.import_module("debugtalk")
+    all_function = inspect.getmembers(debug_module, inspect.isfunction)
+    result = dict(all_function)
+    return result
 
 
 @pytest.hookimpl
