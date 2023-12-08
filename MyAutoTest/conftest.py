@@ -49,6 +49,12 @@ def disconn_database():
 
 @pytest.fixture(scope="session")
 def base_url(request):
+    """
+    设置测试环境url，后续要优化为工厂模式
+
+    :param request:
+    :return:
+    """
     envCode = request.config.getoption("--envCode")
     configHelper = ConfigHelper("Config/env_config.ini")
     if envCode == "dev":
@@ -57,6 +63,7 @@ def base_url(request):
         base_url = configHelper.get_str("url settings", "test_url")
     else:
         base_url = configHelper.get_str("url settings", "uat_url")
+    logHelper.info(f"当前测试url:{base_url}")
     return base_url
 
 

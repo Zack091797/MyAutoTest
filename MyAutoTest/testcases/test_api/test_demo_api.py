@@ -11,15 +11,15 @@ from Utils.Tool.datahelper import dataHelper
 from Utils.Tool.yamlhelper import yamlHelper
 
 
-@pytest.mark.parametrize("get_test_data", dataHelper.fromCsv2List("./testdata/csv_data/test_api_get_token.csv"),
+@pytest.mark.parametrize("get_test_data", dataHelper.fromCsv2List("./testdata/csv_data/test_demo_api.csv"),
                          indirect=True)
 class TestApi(ApiCase):
     """
 
     """
 
-    def test_api_get_token(self, req, base_url, get_test_data, cache):
-        test_data = get_test_data(self.test_api_get_token.__name__)
+    def test_api_get_token(self, req, base_url, get_test_data, get_yaml_template, cache):
+        test_data = get_test_data(get_yaml_template)
         req_name = test_data.get("step")
         req_method = test_data.get("request").get("method")
         req_url = base_url + test_data.get("request").get("url")

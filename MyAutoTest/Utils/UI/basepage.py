@@ -1,6 +1,9 @@
+from time import sleep
+
 import allure
 from selenium.common import WebDriverException
 from selenium.webdriver import ActionChains
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -188,6 +191,19 @@ class BasePage:
         :return:
         """
         self.action.move_to_element(self.locate(loc))
+
+    def action_send_keys(self, keyBoard):
+        match keyBoard:
+            case "selectAll":
+                self.action.send_keys(Keys.CONTROL, "a")
+            case "copy":
+                self.action.send_keys(Keys.CONTROL, "c")
+            case "paste":
+                self.action.send_keys(Keys.CONTROL, "v")
+            case "delete":
+                self.action.send_keys(Keys.DELETE)
+            case "enter":
+                self.action.send_keys(Keys.ENTER)
 
     def perform_actions(self):
         """
@@ -409,6 +425,7 @@ class BasePage:
         :param png_name:
         :return:
         """
+        sleep(1)
         allure.attach(self.get_screenshots_as_png(), png_name, allure.attachment_type.PNG)
 
     # 下拉选择封装...

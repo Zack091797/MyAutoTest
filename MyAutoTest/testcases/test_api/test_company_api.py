@@ -11,14 +11,14 @@ from Utils.Tool.datahelper import dataHelper
                          indirect=True)
 class TestCompanyApi:
 
-    def test_user_login(self, req, get_test_data, cache):
-        test_data = get_test_data(self.test_user_login.__name__)
+    def test_user_login(self, req, get_test_data, get_yaml_template, cache):
+        test_data = get_test_data(get_yaml_template)
         step = test_data.get("step")
         url = test_data.get("request").get("url")
         method = test_data.get("request").get("method")
         data = test_data.get("request").get("data")
         validate = test_data.get("request").get("validate")
-        header = {"Content-Type": "application/json"}
+        header = test_data.get("request").get("header")
         logHelper.info(f"请求名称: {step}\n"
                        f"请求方法: {method}\n"
                        f"请求路径: {url}\n"
@@ -31,15 +31,15 @@ class TestCompanyApi:
         logHelper.info(f"提取的token:{access_token}")
         cache.set("access_token", access_token)
 
-    def test_customer_adaptability(self, req, get_test_data, cache):
-        test_data = get_test_data(self.test_customer_adaptability.__name__)
+    def test_customer_adaptability(self, req, get_test_data, get_yaml_template, cache):
+        test_data = get_test_data(get_yaml_template)
         step = test_data.get("step")
         url = test_data.get("request").get("url")
         method = test_data.get("request").get("method")
         data = test_data.get("request").get("data")
         validate = test_data.get("request").get("validate")
-        header = {"Content-Type": "application/json", "x-demeter-systemid": "001",
-                  "access_token": cache.get("access_token", "")}
+        header = test_data.get("request").get("header")
+        header.update({"access_token": cache.get("access_token", None)})
         logHelper.info(f"请求名称: {step}\n"
                        f"请求方法: {method}\n"
                        f"请求路径: {url}\n"
