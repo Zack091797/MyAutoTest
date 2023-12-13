@@ -1,9 +1,7 @@
 import json
 import re
-
 import jsonpath
 import pytest
-
 from Utils.API.apicase import ApiCase
 from Utils.LogConfig.LogConfig import logHelper
 from Utils.Tool.datahelper import dataHelper
@@ -12,12 +10,11 @@ from Utils.Tool.datahelper import dataHelper
 @pytest.mark.parametrize("get_test_data", dataHelper.fromCsv2List("./testdata/csv_data/test_company_api.csv"),
                          indirect=True)
 class TestCompanyApi(ApiCase):
-
     def test_user_login(self, req, get_test_data, get_yaml_template, cache):
         test_data = get_test_data(get_yaml_template)
         step = test_data.get("step")
         url = test_data.get("request").get("url")
-        method = test_data.get("request").get("method")
+        method = test_data.get( "request" ).get("method")
         data = test_data.get("request").get("data")
         validate = test_data.get("request").get("validate")
         header = test_data.get("request").get("header")
@@ -29,7 +26,8 @@ class TestCompanyApi(ApiCase):
                        f"请求断言: {validate}")
         data_json = json.dumps(data)
         result = req.request(url=url, method=method, data=data_json, headers=header)
-        access_token = re.compile('"accessToken":"(.*?)"').findall(result.text)[0]
+        access_token = re.compile(r'"accessToken":"(.*?)"').findall(result.text)[0]
+        # access_token = jsonpath.jsonpath(result.json(), "$.data.accessToken")[0]
         logHelper.info(f"提取的token:{access_token}")
         cache.set("access_token", access_token)
 

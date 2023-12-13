@@ -1,5 +1,6 @@
 import importlib
 import inspect
+import json
 
 from Utils.Tool.render_template_jinja2 import render_template_by_jinja2
 
@@ -19,16 +20,11 @@ def all_functions():
 if __name__ == '__main__':
     pass
     debug_talk = all_functions()
-    # t_template = [{"name": "正例"}, {"name": "反例"}]
-    # t_str = "获取微信小程序token-${name}, 获取随机数-${get_random()}"
-    # for index, template in enumerate(t_template):
-    #     template.update(debug_talk)
-    #     t = render_template_by_jinja2(t_str, **template)
-    #     print(t)
-    t_str = "${get_random()}"
-    t_temp = {"a": 1, "b": 2}
+    t_dict = {"step": "${step}", "request": {"method": "POST", "data": {"a": "${a}", "b": "${b}"}, "random": "这是随机数${get_random()}"}}
+    t_temp = {"step": "test_func", "a": 1, "b": 2}
     t_temp.update(debug_talk)
-    t = render_template_by_jinja2(t_str, t_temp)
+
+    t = render_template_by_jinja2(t_dict, None, t_temp)
     print(t)
 
     # prefix = random.choice(['6227', '6222', "6228", '6216'])
