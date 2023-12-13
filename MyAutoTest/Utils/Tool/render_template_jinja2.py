@@ -21,11 +21,11 @@ def render_template_by_jinja2(any_obj, *args, **kwargs):
 
 def render_template_str_by_jinja2(t_str, *args, **kwargs):
     """
-    渲染模板字符串, 改写默认的引用变量语法{{var}}, 换成${var}
-
-    模板中引用变量语法 ${var},
-
-    调用函数${fun()}
+    整体模板替换思路：
+        1.把替换的实际值，方法对象传入
+        2.修改模板对象的检索字符串为 ${}
+        3.先进行模板替换
+        4.再判断如果 被替换字符串是以${}开头结尾，则对替换之后的字符串尝试执行表达式并返回，报错则直接返回替换后的字符串
     :param t_str: 模板字符串
     :param args:
     :param kwargs:
@@ -35,11 +35,6 @@ def render_template_str_by_jinja2(t_str, *args, **kwargs):
     result = t.render(*args, **kwargs)
     if t_str.startswith("${") and t_str.endswith("}"):
         try:
-            # 检索字符串开头结尾是${ }, 则try执行内部表达式或函数
-            # eval函数执行字符串中有效的表达式，并返回结果；
-            # 将字符串转换成相应的对象(list、tuple、dict和string之间)；
-            # 将利用反引号转换的字符串再反转回对象
-            # 传入的 str必须是完全的表达式或函数，否则报错
             return eval(result)
         except Exception:
             return result

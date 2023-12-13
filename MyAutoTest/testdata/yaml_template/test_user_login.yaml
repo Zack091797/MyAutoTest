@@ -1,6 +1,6 @@
-- step: 获取登录token-${step1_name}
+- step: 获取登录token
   request:
-    url: http://192.168.27.43:98/user/v1/login
+    url: http://172.16.129.147:98/user/v1/login
     method: POST
     header:
       Content-Type: application/json

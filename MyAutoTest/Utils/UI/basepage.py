@@ -104,7 +104,8 @@ class BasePage:
         :param kwargs:
         :return:
         """
-        value = kwargs.get("value", "可变形参未传入value!!!")
+        loc = kwargs.get("loc", "")
+        value = kwargs.get("value", "")
         match ConditionType:
             case 0:
                 if until_or_not is True:
@@ -138,7 +139,7 @@ class BasePage:
                     self.wait.until_not()
             case 6:
                 if until_or_not is True:
-                    self.wait.until()
+                    self.wait.until(EC.text_to_be_present_in_element(loc, value), f"元素未包含文本{value}!!!")
                 else:
                     self.wait.until_not()
 

@@ -2,6 +2,7 @@ import pytest
 
 from typing import Any
 from Utils.API.requesthelper import RequestHelper
+from Utils.LogConfig.LogConfig import logHelper
 from Utils.Tool.render_template_jinja2 import render_template_by_jinja2
 from Utils.Tool.yamlhelper import yamlHelper
 
@@ -23,14 +24,17 @@ def get_test_data(request, debug_talk):
     csv_data = request.param
     csv_data.update(debug_talk)
 
-    def _render_template(yamlTemplate: Any):
+    def _render_template(yamlTemplate: Any, cache):
+        csv_data.update({"get_cache": getattr(cache, "get", None)})
         return render_template_by_jinja2(yamlTemplate, **csv_data)
+
     return _render_template
 
 
 @pytest.fixture(scope="function")
 def get_yaml_template(request) -> dict:
     template_name = request.node.originalname
+    logHelper.info(f"提取路径->testdata/yaml_template/{template_name}.yaml用例模板...")
     yaml_template = yamlHelper.get_yml_data(f"./testdata/yaml_template/{template_name}.yaml", index=0)
     return yaml_template
 

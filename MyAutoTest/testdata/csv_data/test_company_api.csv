@@ -1,3 +1,2 @@
-step1_name,userName,passWord,verifyInfo,loginType,loginCode,loginMsg,step2_name,taCode,ofCode,adaptCode,adaptMsg
-token正例,1633002554,135246,,2,0,操作成功,adapt正例,99,970191,0,操作成功
-token反例,1633002554,135246,,2,0,操作成功,adapt反例,99,970191,0,操作成功
+userName,passWord,verifyInfo,mobile,loginType,level
+1633063927,135246,,,2,0

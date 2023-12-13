@@ -1,0 +1,13 @@
+- step: 开通权限资格
+  request:
+    url: http://172.16.129.147:98/business/v1/account/debenture
+    method: POST
+    header:
+      Content-Type: application/json
+      access_token: ${get_cache('access_token', None)}
+    data:
+      stockHolderInfoDTOS:
+        - fundType: "0"
+          mktCode: "05"
+          stockholderAcct: ${get_cache('stockholderAcct', None)}
+          openSraccountFlag: "0"

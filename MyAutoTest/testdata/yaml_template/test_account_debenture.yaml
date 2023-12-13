@@ -1,0 +1,10 @@
+- step: 公司债券合格投资者开通状态查询
+  request:
+    url: http://172.16.129.147:98/business/v1/account/debenture
+    method: GET
+    header:
+      Content-Type: application/json
+      access_token: ${get_cache('access_token', None)}
+    data:
+      level: ${level}
+      get_random: ${get_random()}
