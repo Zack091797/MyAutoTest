@@ -11,6 +11,7 @@
 api:
 1.接口api参数化 yaml文件作为数据模板，csv作为数据来源
 2.requests封装，目前是简单封装，后续还需完善
+3.${get_cache("cache_key", None)} 获取pytest的cache缓存中的value
 
 UI：
 1.PO的基类basepage，大部分已封装

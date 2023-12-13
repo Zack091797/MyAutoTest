@@ -14,7 +14,7 @@ from Utils.Tool.datahelper import dataHelper
 class TestCompanyApi(ApiCase):
 
     def test_user_login(self, req, get_test_data, get_yaml_template, cache):
-        test_data = get_test_data(get_yaml_template, cache)
+        test_data = get_test_data(get_yaml_template)
         step = test_data.get("step")
         url = test_data.get("request").get("url")
         method = test_data.get("request").get("method")
@@ -34,13 +34,12 @@ class TestCompanyApi(ApiCase):
         cache.set("access_token", access_token)
 
     def test_account_debenture(self, req, get_test_data, get_yaml_template, cache):
-        test_data = get_test_data(get_yaml_template, cache)
+        test_data = get_test_data(get_yaml_template)
         step = test_data.get("step")
         url = test_data.get("request").get("url")
         method = test_data.get("request").get("method")
         data = test_data.get("request").get("data")
         header = test_data.get("request").get("header")
-        header.update({"access_token": cache.get("access_token", None)})
         logHelper.info(f"请求名称: {step}\n"
                        f"请求方法: {method}\n"
                        f"请求路径: {url}\n"
@@ -52,15 +51,13 @@ class TestCompanyApi(ApiCase):
         logHelper.info(f"提取的stockholderAcct:{stockholderAcct}")
         cache.set("stockholderAcct", stockholderAcct)
 
-    def test_account_debenture_open(self, req, get_test_data, get_yaml_template, cache):
-        test_data = get_test_data(get_yaml_template, cache)
+    def test_account_debenture_open(self, req, get_test_data, get_yaml_template):
+        test_data = get_test_data(get_yaml_template)
         step = test_data.get("step")
         url = test_data.get("request").get("url")
         method = test_data.get("request").get("method")
         data = test_data.get("request").get("data")
         header = test_data.get("request").get("header")
-        data.get("stockHolderInfoDTOS")[0].update({"stockholderAcct": cache.get("stockholderAcct", None)})
-        header.update({"access_token": cache.get("access_token", None)})
         data_json = json.dumps(data)
         logHelper.info(f"请求名称: {step}\n"
                        f"请求方法: {method}\n"

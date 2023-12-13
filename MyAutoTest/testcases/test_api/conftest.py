@@ -22,11 +22,10 @@ def get_test_data(request, debug_talk):
     :return:
     """
     csv_data = request.param
-    csv_data.update(debug_talk)
 
-    def _render_template(yamlTemplate: Any, cache):
-        csv_data.update({"get_cache": getattr(cache, "get", None)})
-        return render_template_by_jinja2(yamlTemplate, **csv_data)
+    def _render_template(yamlTemplate: Any):
+        debug_talk.update({"get_cache": getattr(request.config.cache, "get", None)})
+        return render_template_by_jinja2(yamlTemplate, csv_data, **debug_talk)
 
     return _render_template
 
