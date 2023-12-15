@@ -27,7 +27,7 @@ def get_conn_database():
         db = MySqlHelper()
         db.connectDB(database_info)
         db_list.append(db)
-        logHelper.info(f"成功连接数据库{db._database_info.get('database')}...")
+        logHelper.info(f"成功连接数据库{db.database_info.get('database')}...")
         return db
 
     return _get_mysql_conn
@@ -44,7 +44,7 @@ def disconn_database():
     global db_list
     for index, db in enumerate(db_list):
         db.close()
-        logHelper.info(f"关闭连接数据库{db._database_info.get('database')}...")
+        logHelper.info(f"关闭连接数据库{db.database_info.get('database')}...")
 
 
 @pytest.fixture(scope="session")

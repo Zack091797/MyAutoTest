@@ -1,3 +1,4 @@
+from typing import Type
 from time import sleep
 
 import allure
@@ -5,8 +6,10 @@ import pytest
 from selenium import webdriver
 
 from Utils.LogConfig.LogConfig import logHelper
+from Utils.UI.basepage import BasePage
 
 browser_driver = None
+page_dict = {}
 
 
 @pytest.fixture(scope="session", name="driver")
@@ -26,7 +29,38 @@ def initDriver():
     return browser_driver
 
 
-@pytest.fixture(scope="session", autouse=False)
+@pytest.fixture(scope="session")
+def init_page(driver):
+    """
+    fixture工厂模式，初始化page对象
+    :param driver:
+    :return:
+    """
+    global page_list
+
+    def _init_ui_page(PageObj: Type[BasePage], key: str):
+        page = PageObj(driver)
+        page_dict.update({key: page})
+        return page
+
+    return _init_ui_page
+
+
+@pytest.fixture()
+def get_page_dict():
+    global page_dict
+    return page_dict
+
+
+@pytest.fixture(scope="session", autouse=True)
+def destroy_page(closeBrowser):
+    yield
+    global page_dict
+    if page_dict:
+        page_dict.clear()
+
+
+@pytest.fixture(scope="session")
 def closeBrowser():
     yield
     global browser_driver
@@ -34,7 +68,6 @@ def closeBrowser():
         browser_driver.quit()
         browser_driver = None
         logHelper.info("浏览器已关闭...")
-    sleep(5)
 
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)

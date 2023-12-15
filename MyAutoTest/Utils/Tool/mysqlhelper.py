@@ -60,3 +60,7 @@ class MySqlHelper:
             self.conn.close()
         else:
             pass
+
+    @property
+    def database_info(self):
+        return self._database_info

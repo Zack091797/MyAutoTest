@@ -19,27 +19,38 @@ class BasePage:
         self.action = ActionChains(self.driver)
         self.wait = WebDriverWait(self.driver, 20)
 
-    def locate(self, loc: iter):
+    def locate(self, loc: str, by="xpath"):
         """
         定位元素，返回WebElement对象
 
+        :param by:
         :param loc: 列表或元组，包含定位方式和定位元素
         :return:
         """
+        loc = (by, loc)
         return self.driver.find_element(*loc)
 
-    def locates(self, loc: iter, index=None):
+    def locates(self, loc: str, by="xpath", index=None):
         """
         定位组元素，若index为None，则返回一组元素对象list；否则返回对应下标的单个元素对象
 
+        :param by:
         :param loc: 列表或元组，包含定位方式和定位元素
         :param index: 定位组元素对象的子元素对象，默认为None
         :return:
         """
+        loc = (by, loc)
         if index is None:
             return self.driver.find_elements(*loc)
         else:
             return self.driver.find_elements(*loc)[index]
+
+    def is_element_exist(self, loc: str):
+        try:
+            self.locate(loc)
+            return True
+        except WebDriverException:
+            return False
 
     def open_url(self, url):
         """
@@ -50,7 +61,7 @@ class BasePage:
         """
         self.driver.get(url)
 
-    def click_element(self, loc: iter):
+    def click_element(self, loc: str):
         """
         点击元素
 
@@ -59,7 +70,7 @@ class BasePage:
         """
         self.locate(loc).click()
 
-    def input_element(self, loc: iter, content: str):
+    def input_element(self, loc: str, content: str):
         """
         在元素上输入文本内容content
 
@@ -69,7 +80,7 @@ class BasePage:
         """
         self.locate(loc).send_keys(content)
 
-    def wait_condition(self, ConditionType: int, until_or_not: bool = True, *args, **kwargs):
+    def wait_condition(self, ConditionType: int, until_or_not: bool = True, by="xpath", *args, **kwargs):
         """
         显示等待条件,
 
@@ -98,13 +109,14 @@ class BasePage:
         11 判断元素
 
 
+        :param by:
         :param ConditionType:
         :param until_or_not:
         :param args:
         :param kwargs:
         :return:
         """
-        loc = kwargs.get("loc", "")
+        loc = (by, kwargs.get("loc", ""))
         value = kwargs.get("value", "")
         match ConditionType:
             case 0:
@@ -184,7 +196,7 @@ class BasePage:
         """
         self.driver.set_page_load_timeout(timeout)
 
-    def move_above_element(self, loc):
+    def move_above_element(self, loc: str):
         """
         鼠标悬停元素之上
 
@@ -205,6 +217,8 @@ class BasePage:
                 self.action.send_keys(Keys.DELETE)
             case "enter":
                 self.action.send_keys(Keys.ENTER)
+            case _:
+                pass
 
     def perform_actions(self):
         """
@@ -254,7 +268,7 @@ class BasePage:
         """
         return self.driver.page_source
 
-    def get_text(self, loc):
+    def get_text(self, loc: str):
         """
         获取指定元素文本
 
@@ -263,7 +277,7 @@ class BasePage:
         """
         return self.locate(loc).text
 
-    def get_element_attribute(self, loc, attr):
+    def get_element_attribute(self, loc: str, attr: str):
         """
         返回指定元素的指定属性
 
@@ -273,24 +287,24 @@ class BasePage:
         """
         return self.locate(loc).get_attribute(attr)
 
-    def do_js(self, script):
+    def do_js(self, script: iter):
         """
         driver执行js脚本
 
         :param script:
         :return:
         """
-        self.driver.excute_script(*script)
+        self.driver.execute_script(*script)
 
-    def js_click_element(self, loc):
+    def js_click_element(self, loc: str):
         """
         js点击元素，解决遮挡导致误点击问题
 
         :return:
         """
-        self.driver.do_js(("arguments[0].click()", self.locate(loc)))
+        self.do_js(("arguments[0].click()", self.locate(loc)))
 
-    def js_input_element(self, loc, content):
+    def js_input_element(self, loc: str, content: str):
         """
         js输入文本
 
@@ -298,9 +312,9 @@ class BasePage:
         :param content:
         :return:
         """
-        self.driver.do_js((f"arguments[0].value={content}", self.locate(loc)))
+        self.do_js((f"arguments[0].value={content}", self.locate(loc)))
 
-    def js_remove_attribute(self, loc, attr):
+    def js_remove_attribute(self, loc: str, attr: str):
         """
         js去除元素属性
 
@@ -308,9 +322,9 @@ class BasePage:
         :param attr:
         :return:
         """
-        self.driver.do_js((f"arguments[0].removeAttribute({attr})", self.locate(loc)))
+        self.do_js((f"arguments[0].removeAttribute({attr})", self.locate(loc)))
 
-    def js_change_attribute(self, loc, attr, new_value):
+    def js_change_attribute(self, loc: str, attr: str, new_value: str):
         """
         js修改元素属性
 
@@ -319,16 +333,19 @@ class BasePage:
         :param new_value:
         :return:
         """
-        self.driver.do_js(f"arguments[0].{attr}={new_value}", self.locate(loc))
+        self.do_js(f"arguments[0].{attr}={new_value}", self.locate(loc))
 
-    def js_scroll_into_view(self, loc):
+    def js_scroll_into_view(self, loc: str):
         """
         js定位滚动至元素
 
         :param loc:
         :return:
         """
-        self.driver.do_js(("arguments[0].scrollIntoView()", self.locate(loc)))
+        self.do_js(("arguments[0].scrollIntoView()", self.locate(loc)))
+
+    def js_scroll_side_bar(self, loc: str):
+        pass
 
     def set_maximize_window(self):
         """
@@ -374,7 +391,7 @@ class BasePage:
         handles = self.get_all_window_handles()
         self.driver.switch_to.window(handles[index])
 
-    def switch_iframe(self, loc):
+    def switch_iframe(self, loc: str):
         """
         切换子iframe
 
