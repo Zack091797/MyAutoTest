@@ -23,6 +23,7 @@ UI：
 
 
 1.请求数据统一封装  不太好实现，每个请求是params、data、还是json传参数不能确认，或者，读模板的时候，就确认是哪个关键字？
+yaml模板中规定好，param json data 各自对应 param json data 参数，提取的时候，如果有，则添加参数，如果没有则略过
 2.base_url 工厂化
 3.SchemaJson校验
 4.data多段，提取符合要求的参数, 提取的正则表达式和jsonpath要进行封装，处理提取可能的异常

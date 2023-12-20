@@ -31,7 +31,7 @@ class TestCompanyApi(ApiCase):
         logHelper.info(f"提取的token:{access_token}")
         cache.set("access_token", access_token)
 
-    def test_account_debenture(self, req, get_test_data, get_yaml_template, cache):
+    def test_account_debenture_query(self, req, get_test_data, get_yaml_template, cache):
         test_data = get_test_data(get_yaml_template)
         step = test_data.get("step")
         url = test_data.get("request").get("url")

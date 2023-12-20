@@ -63,7 +63,7 @@ def base_url(request):
         base_url = configHelper.get_str("url settings", "test_url")
     else:
         base_url = configHelper.get_str("url settings", "uat_url")
-    logHelper.info(f"当前测试url:{base_url}")
+    logHelper.info(f"当前测试url: {base_url}")
     return base_url
 
 

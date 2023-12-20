@@ -2,6 +2,8 @@
   request:
     url: /cgi-bin/token
     method: POST
+    header:
+      Content-Type: application/json
     data:
       grant_type: client_credential
       appid: ${appid}

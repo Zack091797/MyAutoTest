@@ -10,7 +10,8 @@ class YamlHelper:
     def __init__(self):
         pass
 
-    def get_yml_data(self, yaml_path: str, key: Union[str] = None, index: Union[int] = None,
+    @classmethod
+    def get_yml_data(cls, yaml_path: str, key: Union[str] = None, index: Union[int] = None,
                      isOutsideDict=True) -> [dict, list]:
         """
         读取yaml文件
@@ -48,15 +49,18 @@ class YamlHelper:
                 except Exception as err:
                     print(f"index对应的value不存在, 请检查index值!:{err}")
 
-    def set_yml_data(self, yaml_path: str, value: Union[list, dict] = None):
+    @classmethod
+    def set_yml_data(cls, yaml_path: str, value: Union[list, dict] = None):
         with open(Path(Path.cwd(), yaml_path), mode="a", encoding="utf-8") as f:
             yaml.safe_dump(value, stream=f, allow_unicode=True)
 
-    def clear_yml_data(self, yaml_path):
+    @classmethod
+    def clear_yml_data(cls, yaml_path):
         with open(Path(Path.cwd(), yaml_path), mode="w", encoding="utf-8") as f:
             f.truncate()
 
-    def template_yml_data(self, yaml_path, value):
+    @classmethod
+    def template_yml_data(cls, yaml_path, value):
         """弃用"""
         with open(Path(Path.cwd(), yaml_path), mode="w", encoding="utf-8") as f:
             res = Template(f.read()).safe_substitute(value)
