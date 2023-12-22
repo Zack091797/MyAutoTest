@@ -1,15 +1,15 @@
 import re
-from typing import Union, Callable
-
 import jsonpath
-
+import json
+import pytest_check as check
 from Utils.LogConfig.LogConfig import logHelper
+from typing import Union, Callable, Iterable
 
 
 class ApiCase:
 
     @staticmethod
-    def create_request_data(base_url: str, callback: callable, callback_param: Union[dict, list]) -> dict:
+    def create_request_data(base_url: str, callback: Callable, callback_param: Union[dict, list]) -> dict:
         """封装请求的各项数据"""
         real_data = callback(callback_param)
         api_name = real_data.get("step", None)
@@ -17,7 +17,7 @@ class ApiCase:
         url = base_url + real_data.get("request", None).get("url", None)
         header = real_data.get("request", None).get("header", None)
         param = real_data.get("request", None).get("param", None)
-        json = real_data.get("request", None).get("json", None)
+        jsons = real_data.get("request", None).get("json", None)
         data = real_data.get("request", None).get("data", None)
         file = real_data.get("request", None).get("file", None)
         cookie = real_data.get("request", None).get("cookie", None)
@@ -30,7 +30,7 @@ class ApiCase:
                        f"{'' if url is None else f'请求路径: {request_data_print(url)}'}"
                        f"{'' if header is None else f'请求headers: {request_data_print(header)}'}"
                        f"{'' if param is None else f'请求数据param: {request_data_print(param)}'}"
-                       f"{'' if json is None else f'请求数据json: {request_data_print(json)}'}"
+                       f"{'' if jsons is None else f'请求数据json: {request_data_print(jsons)}'}"
                        f"{'' if data is None else f'请求数据data: {request_data_print(data)}'}"
                        f"{'' if file is None else f'请求数据file: {request_data_print(file)}'}"
                        f"请求断言: {validate}")
@@ -43,8 +43,8 @@ class ApiCase:
             request_data.update({"headers": header})
         if param:
             request_data.update({"params": param})
-        if json:
-            request_data.update({"json": json})
+        if jsons:
+            request_data.update({"json": jsons})
         if data:
             request_data.update({"data": data})
         if file:
@@ -56,6 +56,15 @@ class ApiCase:
         if auth:
             request_data.update({"auth": auth})
         return request_data
+
+    # @staticmethod
+    # def check_validate(validate_expr: str, obj: Iterable, msg: str):
+    #     """调用pytest-check断言"""
+    #     getattr(check, validate_expr)(*obj, msg)
+    # @staticmethod
+    # def check_validate(obj: Iterable[(str, tuple)]):
+    #     for index, item in enumerate(obj):
+    #         pass
 
     @staticmethod
     def extract_resp(expr: str, src: [dict, str], ex_type: str = "jsonpath"):
@@ -79,7 +88,3 @@ class ApiCase:
             if value is False:
                 value = None
             return value
-
-
-
-

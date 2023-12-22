@@ -1,6 +1,6 @@
 - step: 获取登录token
   request:
-    url: http://172.16.129.147:98/user/v1/login
+    url: /user/v1/login
     method: POST
     header:
       Content-Type: application/json
@@ -10,5 +10,5 @@
       verifyInfo: ${verifyInfo}
       loginType: ${loginType}
     validate:
-      code: ${loginCode}
-      msg: ${loginMsg}
+      - code: ${loginCode}
+      - msg: ${loginMsg}

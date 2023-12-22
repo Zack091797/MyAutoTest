@@ -6,7 +6,6 @@ from Utils.LogConfig.LogConfig import logHelper
 
 class TestSwhyMsg(ApiCase):
 
-
     def test_batch_send_wechatcorp(self, req, cache):
         url = "http://192.168.27.31:34044/message/v1/wechatcorp/batch/send"
         header = {"Content-Type": "application/json"}
