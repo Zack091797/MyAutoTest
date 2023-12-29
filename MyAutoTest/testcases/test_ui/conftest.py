@@ -36,7 +36,7 @@ def init_page(driver):
     :param driver:
     :return:
     """
-    global page_list
+    global page_dict
 
     def _init_ui_page(PageObj: Type[BasePage], key: str):
         page = PageObj(driver)
@@ -58,6 +58,7 @@ def destroy_page(closeBrowser):
     global page_dict
     if page_dict:
         page_dict.clear()
+        logHelper.info("page对象字典已销毁...")
 
 
 @pytest.fixture(scope="session")

@@ -1,6 +1,7 @@
 import importlib
 import inspect
 import json
+import re
 from pathlib import Path
 
 from Utils.LogConfig.LogConfig import logHelper
@@ -29,7 +30,9 @@ if __name__ == '__main__':
     # yamlHelper.set_yml_data(r"testdata/yaml_data/test_swhy_corp.yml", data)
     # data = yamlHelper.get_yml_data(Path(Path.cwd(), r"testdata/yaml_data/test_swhy_corp.yml"))
     # print(data)
-    print(None)
+    strTxt = "共 6 条   前往    显示行数    条"
+    t = re.compile(r"[0-9]+").findall(strTxt)
+    print(t)
 
 
     # 1.yaml定义用例模板，test用例需要有校验必填字段的方法 -- jsonschma定义，入参和出参

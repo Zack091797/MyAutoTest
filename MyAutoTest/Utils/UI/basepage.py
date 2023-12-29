@@ -1,10 +1,11 @@
 from time import sleep
 
 import allure
-from selenium.common import WebDriverException
+from selenium.common import WebDriverException, NoSuchElementException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 
 
@@ -18,6 +19,7 @@ class BasePage:
         self.driver = driver
         self.action = ActionChains(self.driver)
         self.wait = WebDriverWait(self.driver, 20)
+        self.select = None
 
     def locate(self, loc: str, by="xpath"):
         """
@@ -49,6 +51,8 @@ class BasePage:
         try:
             self.locate(loc)
             return True
+        except NoSuchElementException:
+            return False
         except WebDriverException:
             return False
 
@@ -82,7 +86,7 @@ class BasePage:
 
     def wait_condition(self, ConditionType: int, until_or_not: bool = True, by="xpath", *args, **kwargs):
         """
-        显示等待条件,
+        显示等待条件, 不应该用数字代表条件，应改成条件简称
 
         0 判断 title 是否等于预期 value
 
@@ -275,7 +279,7 @@ class BasePage:
         :param loc:
         :return:
         """
-        return self.locate(loc).text
+        return self.locate(loc).text.strip()
 
     def get_element_attribute(self, loc: str, attr: str):
         """
@@ -446,6 +450,13 @@ class BasePage:
         sleep(1)
         allure.attach(self.get_screenshots_as_png(), png_name, allure.attachment_type.PNG)
 
-    # 下拉选择封装...
-    def select_by_index(self):
-        pass
+    def select_drop_down_box(self, loc, index=None, value=None, text=None):
+        """下拉框选择"""
+        self.select = Select(self.locate(loc))
+        if index:
+            self.select.select_by_index(index)
+        if value:
+            self.select.select_by_value(value)
+        if text:
+            self.select.select_by_visible_text(text)
+

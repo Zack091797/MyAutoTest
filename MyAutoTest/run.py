@@ -5,11 +5,11 @@ import pytest
 
 
 if __name__ == "__main__":
-    pytest.main(["./testcases/test_api/test_company_api.py", "--envCode", "uat"])
-    # pytest.main(["./testcases/test_ui/OnlineManagement/test_online_management.py", "--envCode", "uat"])
+    # pytest.main(["./testcases/test_api/test_company_api.py", "--envCode", "uat"])
+    pytest.main(["./testcases/test_ui/OnlineManagement/test_online_management.py", "--envCode", "uat"])
     # pytest.main(["./testcases/test_ui/test_ui_demo.py", "--envCode", "dev"])
     # pytest.main(["./testcases/test_api/test_swhy_message.py"])
-    # pytest.main(["./testcases/test_api/test_swhy_20120065_20120066.py"])
+
     # pytest.main(["./testcases/test_api/test_demo_api.py"])
     # sleep(3)
     # os.system("allure generate ./allure_result -o ./allure_reports --clean")

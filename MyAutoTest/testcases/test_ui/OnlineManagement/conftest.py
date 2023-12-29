@@ -7,7 +7,7 @@ from Utils.LogConfig.LogConfig import logHelper
 
 
 @pytest.fixture()
-def reset_side_bar(driver, get_page_dict, init_page):
+def reset_side_bar(get_page_dict, init_page):
     yield
     processView = get_page_dict.get("processView", init_page(ProcessView_Page, "processView"))
     processView.js_scroll_into_view(f"//*[@id='ztree']/li[1]")

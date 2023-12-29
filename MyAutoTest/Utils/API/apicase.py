@@ -61,10 +61,10 @@ class ApiCase:
     # def check_validate(validate_expr: str, obj: Iterable, msg: str):
     #     """调用pytest-check断言"""
     #     getattr(check, validate_expr)(*obj, msg)
-    # @staticmethod
-    # def check_validate(obj: Iterable[(str, tuple)]):
-    #     for index, item in enumerate(obj):
-    #         pass
+    @staticmethod
+    def check_validate(obj: Iterable[(str, tuple)]):
+        for index, item in enumerate(obj):
+            pass
 
     @staticmethod
     def extract_resp(expr: str, src: [dict, str], ex_type: str = "jsonpath"):
