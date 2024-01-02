@@ -65,6 +65,21 @@ class BasePage:
         """
         self.driver.get(url)
 
+    def goto_next(self):
+        """浏览器前进一页"""
+        self.driver.forward()
+
+    def back_previous(self):
+        """浏览器后退一页"""
+        # js执行后退
+        # self.do_js("window.history.back()")
+        self.driver.back()
+
+
+    def refresh_page(self):
+        """浏览器页面刷新"""
+        self.driver.refresh()
+
     def click_element(self, loc: str):
         """
         点击元素
@@ -349,7 +364,12 @@ class BasePage:
         self.do_js(("arguments[0].scrollIntoView()", self.locate(loc)))
 
     def js_scroll_side_bar(self, loc: str):
-        pass
+        "未完"
+        self.do_js("window.scrollInto")
+
+    def js_body_style_zoom(self, prop: str):
+        """js调整页面缩放"""
+        self.do_js((f"document.body.style.zoom='{prop}'",))
 
     def set_maximize_window(self):
         """

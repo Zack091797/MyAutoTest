@@ -52,7 +52,7 @@ def get_page_dict():
     return page_dict
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session", autouse=False)
 def destroy_page(closeBrowser):
     yield
     global page_dict

@@ -3,6 +3,7 @@ import timeit
 import pytest
 import pytest_check as check
 from UI_Objects.OnlineManagement.OnlineManagement_Home import Management_Home_Page
+from UI_Objects.OnlineManagement.ProcessCheck import ProcessCheck_Page
 from UI_Objects.OnlineManagement.ProcessView import ProcessView_Page
 from Utils.LogConfig.LogConfig import logHelper
 from time import sleep
@@ -15,6 +16,7 @@ class TestOnlineManagement:
         """用户登录系统"""
         home = init_page(Management_Home_Page, "home")
         home.open_url(base_url)
+        # home.js_body_style_zoom("0.67")
         logHelper.info(f"打开页面:{base_url}")
         home.login_account("liuyk", "admin")
         logHelper.info(f"输入账号:liuyk, 密码:admin")
@@ -130,7 +132,12 @@ class TestOnlineManagement:
         check.equal(formNodeType, tableProcessStatus)
         check.equal(formChannel, tableChannel)
 
-    def test_check_(self):
-        pass
-
+    def test_check_(self, get_page_dict, init_page):
+        """单向视频优先待办流程"""
+        processCheck: ProcessCheck_Page = get_page_dict.get("processView", init_page(ProcessCheck_Page, "processCheck"))
+        processCheck.choose_top_menu("流程审核")
+        processCheck.choose_left_menu("待办流程", "待办流程")
+        pendingNum = processCheck.getNum_PendingProcess("单向视频优先待办个数")
+        if int(pendingNum) != 0:
+            processCheck.goto_PendingProcess("进入单向视频优先待办流程列表")
         
