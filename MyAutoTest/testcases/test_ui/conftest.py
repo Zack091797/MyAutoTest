@@ -52,7 +52,7 @@ def get_page_dict():
     return page_dict
 
 
-@pytest.fixture(scope="session", autouse=False)
+@pytest.fixture(scope="session", autouse=True)
 def destroy_page(closeBrowser):
     yield
     global page_dict
@@ -66,6 +66,7 @@ def closeBrowser():
     yield
     global browser_driver
     if browser_driver is not None:
+        sleep(5)
         browser_driver.quit()
         browser_driver = None
         logHelper.info("浏览器已关闭...")

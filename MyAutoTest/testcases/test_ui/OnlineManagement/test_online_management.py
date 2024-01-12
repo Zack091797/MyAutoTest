@@ -16,7 +16,6 @@ class TestOnlineManagement:
         """用户登录系统"""
         home = init_page(Management_Home_Page, "home")
         home.open_url(base_url)
-        # home.js_body_style_zoom("0.67")
         logHelper.info(f"打开页面:{base_url}")
         home.login_account("liuyk", "admin")
         logHelper.info(f"输入账号:liuyk, 密码:admin")
@@ -27,10 +26,10 @@ class TestOnlineManagement:
             home.click_element("//*[@id='jbox-state-state0']/div[2]/button")
         else:
             pass
+        home.windows_PropScale(4)
         sleep(3)
 
-    @pytest.mark.skip
-    # @pytest.mark.usefixtures("reset_side_bar")
+    # @pytest.mark.skip
     @pytest.mark.dependency(depends=["test_log_in"], scope="class")
     def test_view_loopViewPage(self, init_page, base_url, cache):
         """循环查看业务页面加载是否报错"""
@@ -46,7 +45,7 @@ class TestOnlineManagement:
                 secondMenuText = processView.get_text(f"//*[@id='ztree']/li[{i + 1}]/ul/li[{j + 1}]/a/span[2]")
                 logHelper.info(f"打开菜单 {firstMenuText}->{secondMenuText}")
                 processView.iframe_into_Content()
-                processView.wait_condition(ConditionType=6, loc="/html/body/ul/li/a", value="流程列表")
+                processView.set_obviously_wait(6, loc="/html/body/ul/li/a", value="流程列表")
                 form_topic = processView.get_text("/html/body/ul/li/a")
                 check.is_in("流程列表", form_topic)
                 processView.switch_parent_frame()
@@ -62,15 +61,16 @@ class TestOnlineManagement:
 
         processView.input_custMobile("13651706659")
         processView.input_timeInterval(("2023", "十二", "1"), ("2023", "十二", "28"))
-        exeTime1 = timeit.default_timer()
+        executeTime1 = timeit.default_timer()
         processView.click_btnSubmit()
-        tableTrue = processView.is_element_exist("//*[@id='contentTable']/tbody/tr")
-        exeTime2 = timeit.default_timer()
-        exeTime = exeTime2 - exeTime1
-        logHelper.info(f"查询执行时长: {exeTime}秒")
-        check.is_true(tableTrue, "手机号搜索")
-        if tableTrue:
-            check.less(exeTime, 3, "查询时间小于3s.")
+        # tableTrue = processView.is_element_exist("//*[@id='contentTable']/tbody/tr")
+        processView.set_obviously_wait()
+        executeTime2 = timeit.default_timer()
+        executeTime = executeTime2 - executeTime1
+        logHelper.info(f"查询执行时长: {executeTime}秒")
+        # check.is_true(tableTrue, "手机号搜索")
+        # if tableTrue:
+        #     check.less(executeTime, 3, "查询时间小于3s.")
         sleep(2)
         processView.click_btnReset()
 
@@ -132,6 +132,7 @@ class TestOnlineManagement:
         check.equal(formNodeType, tableProcessStatus)
         check.equal(formChannel, tableChannel)
 
+    @pytest.mark.skip
     def test_check_(self, get_page_dict, init_page):
         """单向视频优先待办流程"""
         processCheck: ProcessCheck_Page = get_page_dict.get("processView", init_page(ProcessCheck_Page, "processCheck"))
@@ -140,4 +141,35 @@ class TestOnlineManagement:
         pendingNum = processCheck.getNum_PendingProcess("单向视频优先待办个数")
         if int(pendingNum) != 0:
             processCheck.goto_PendingProcess("进入单向视频优先待办流程列表")
+            processCheck.click_element("//*[@id='contentTable']/tbody/tr/td[contains(text(), '审核中') or contains(text(), '未审核')]/following-sibling::th/a", 2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         

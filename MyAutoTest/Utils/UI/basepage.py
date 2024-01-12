@@ -1,12 +1,16 @@
 from time import sleep
+from typing import Union, Literal
 
 import allure
+import pyautogui
 from selenium.common import WebDriverException, NoSuchElementException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
+
+from Utils.LogConfig.LogConfig import logHelper
 
 
 class BasePage:
@@ -75,19 +79,33 @@ class BasePage:
         # self.do_js("window.history.back()")
         self.driver.back()
 
-
     def refresh_page(self):
         """浏览器页面刷新"""
         self.driver.refresh()
 
-    def click_element(self, loc: str):
+    def windows_PropScale(self, prop: int, model: Literal["down", "up"] = "down"):
+        """页面比例缩放, webdriver控制不了ctrl+-缩放页面，这里引入pyautogui库"""
+        if model == "down":
+            for i in range(0, prop):
+                pyautogui.hotkey("ctrl", "-")
+                logHelper.info(f"页面缩小...")
+        else:
+            for i in range(0, prop):
+                pyautogui.hotkey("ctrl", "+")
+                logHelper.info(f"页面放大...")
+
+    def click_element(self, loc: str, index: Union[int | None] = None):
         """
         点击元素
 
+        :param index:
         :param loc: 列表或元组，包含定位方式和定位元素
         :return:
         """
-        self.locate(loc).click()
+        if index is None:
+            self.locate(loc).click()
+        else:
+            self.locates(loc, index=index).click()
 
     def input_element(self, loc: str, content: str):
         """
@@ -99,34 +117,8 @@ class BasePage:
         """
         self.locate(loc).send_keys(content)
 
-    def wait_condition(self, ConditionType: int, until_or_not: bool = True, by="xpath", *args, **kwargs):
+    def wait_condition(self, ConditionType: int, *args, until_or_not: bool = True, by="xpath", **kwargs):
         """
-        显示等待条件, 不应该用数字代表条件，应改成条件简称
-
-        0 判断 title 是否等于预期 value
-
-        1 判断 title 是否包含预期 value
-
-        2 判断元素是否被加载到 dom 树，不代表元素一定可见
-
-        3 判断元素是否可见，传入 locator，可见代表元素非隐藏，宽高都不等于0
-
-        4 判断元素是否可见，传入 webelement
-
-        5 判断元素是否不存在于 dom 树或不可见
-
-        6 判断元素的 text 是否包含预期 value
-
-        7 判断元素的 value 属性是否包含预期 value
-
-        8 判断 frame 是否可以 switch 切换进入，True 则切换进入，反之 False
-
-        9 判断元素可见且可点击
-
-        10 判断元素不可点击
-
-        11 判断元素
-
 
         :param by:
         :param ConditionType:
@@ -174,28 +166,52 @@ class BasePage:
                 else:
                     self.wait.until_not()
 
-    def set_obviously_wait(self, implicitly_time=10):
+    def set_obviously_wait(self, ConditionType, *args, implicitly_time=10, **kwargs):
         """
         设置显示等待之前需要关闭全局隐式等待，完成之后再重新设置隐式等待
+        显示等待条件, 不应该用数字代表条件，应改成条件简称
 
+        0 判断 title 是否等于预期 value
+
+        1 判断 title 是否包含预期 value
+
+        2 判断元素是否被加载到 dom 树，不代表元素一定可见
+
+        3 判断元素是否可见，传入 locator，可见代表元素非隐藏，宽高都不等于0
+
+        4 判断元素是否可见，传入 webelement
+
+        5 判断元素是否不存在于 dom 树或不可见
+
+        6 判断元素的 text 是否包含预期 value
+
+        7 判断元素的 value 属性是否包含预期 value
+
+        8 判断 frame 是否可以 switch 切换进入，True 则切换进入，反之 False
+
+        9 判断元素可见且可点击
+
+        10 判断元素不可点击
+
+        11 判断元素
         :return:
         """
         try:
             self.set_implicitly_wait(0)
-            self.wait_condition()
+            self.wait_condition(ConditionType, *args, **kwargs)
         except WebDriverException as err:
             raise err
         finally:
             self.set_implicitly_wait(implicitly_time)
 
-    def set_implicitly_wait(self, wait_time=10):
+    def set_implicitly_wait(self, implicitly_time=10):
         """
         设置隐式等待，默认10s
 
-        :param wait_time:
+        :param implicitly_time:
         :return:
         """
-        self.driver.implicitly_wait(wait_time)
+        self.driver.implicitly_wait(implicitly_time)
 
     def set_scripts_timeout(self, timeout=15):
         """
@@ -225,6 +241,7 @@ class BasePage:
         self.action.move_to_element(self.locate(loc))
 
     def action_send_keys(self, keyBoard):
+
         match keyBoard:
             case "selectAll":
                 self.action.send_keys(Keys.CONTROL, "a")
@@ -238,6 +255,7 @@ class BasePage:
                 self.action.send_keys(Keys.ENTER)
             case _:
                 pass
+        self.perform_actions()
 
     def perform_actions(self):
         """
@@ -365,11 +383,13 @@ class BasePage:
 
     def js_scroll_side_bar(self, loc: str):
         "未完"
-        self.do_js("window.scrollInto")
+        self.do_js("window.scrollTo")
 
-    def js_body_style_zoom(self, prop: str):
-        """js调整页面缩放"""
-        self.do_js((f"document.body.style.zoom='{prop}'",))
+    def js_body_style_transform(self, prop: float):
+        """js调整页面缩放-会偏移，暂时不用"""
+        # self.do_js((f"document.body.style.transform='scale({prop})'",))
+        self.do_js((f"chrome.settingsPrivate.setDefaultZoom({prop});"))
+        sleep(1)
 
     def set_maximize_window(self):
         """
@@ -379,7 +399,7 @@ class BasePage:
         """
         self.driver.maximize_window()
 
-    def set_custom_window_size(self, width, height):
+    def set_customer_window_size(self, width, height):
         """
         自定义窗口尺寸
 
@@ -470,7 +490,7 @@ class BasePage:
         sleep(1)
         allure.attach(self.get_screenshots_as_png(), png_name, allure.attachment_type.PNG)
 
-    def select_drop_down_box(self, loc, index=None, value=None, text=None):
+    def select_ComboBox(self, loc, index=None, value=None, text=None):
         """下拉框选择"""
         self.select = Select(self.locate(loc))
         if index:
@@ -479,4 +499,3 @@ class BasePage:
             self.select.select_by_value(value)
         if text:
             self.select.select_by_visible_text(text)
-

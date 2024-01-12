@@ -39,11 +39,11 @@ class ProcessView_Page(BasePage):
 
     def input_sysChannel(self, sysChannel: str):
         """搜索条件-渠道"""
-        self.select_drop_down_box("//*[@id='channel']", text=sysChannel)
+        self.select_ComboBox("//*[@id='channel']", text=sysChannel)
 
     def input_certType(self, certType: str):
         """搜索条件-证件类型"""
-        self.select_drop_down_box("//*[@id='certType']", text=certType)
+        self.select_ComboBox("//*[@id='certType']", text=certType)
 
     def input_timeInterval(self, *timeInterval):
         """搜索条件-时间区间"""
@@ -55,7 +55,7 @@ class ProcessView_Page(BasePage):
 
             self.click_element("//*[@id='dpTitle']/div[4]/input")  # 点击年份框
             self.action_send_keys("delete")
-            self.perform_actions()
+            # self.perform_actions()
             self.input_element("//*[@id='dpTitle']/div[4]/input", interval[0])  # 输入年份
             self.click_element("//*[@id='dpTitle']/div[3]/input")  # 点击月份框
             self.click_element(f"//*[@id='dpTitle']/div[3]/div/table/tbody//tr/td[text()='{interval[1]}']")  # 选择月份
@@ -85,6 +85,7 @@ class ProcessView_Page(BasePage):
         return statusTxtLen
 
     def getLen_tableInstance(self):
+        "获取"
         tableTxt = self.get_text("/html/body/div/ul/li[last()]/a")
         tableLen = re.compile(r"[0-9]+").findall(tableTxt)[0]
         return tableLen
