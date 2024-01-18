@@ -22,7 +22,7 @@ class BasePage:
     def __init__(self, driver):
         self.driver = driver
         self.action = ActionChains(self.driver)
-        self.wait = WebDriverWait(self.driver, 20)
+        self.wait = None
         self.select = None
 
     def locate(self, loc: str, by="xpath"):
@@ -88,11 +88,11 @@ class BasePage:
         if model == "down":
             for i in range(0, prop):
                 pyautogui.hotkey("ctrl", "-")
-                logHelper.info(f"页面缩小...")
+            logHelper.info(f"页面缩小...")
         else:
             for i in range(0, prop):
                 pyautogui.hotkey("ctrl", "+")
-                logHelper.info(f"页面放大...")
+            logHelper.info(f"页面放大...")
 
     def click_element(self, loc: str, index: Union[int | None] = None):
         """
@@ -117,56 +117,71 @@ class BasePage:
         """
         self.locate(loc).send_keys(content)
 
-    def wait_condition(self, ConditionType: int, *args, until_or_not: bool = True, by="xpath", **kwargs):
+    def wait_condition(self, ConditionType: int, *args, by="xpath", **kwargs):
         """
+        显示等待条件, 不应该用数字代表条件，应改成条件简称
 
+        0 判断 title 是否等于预期 value
+
+        1 判断 title 是否包含预期 value
+
+        2 判断元素是否被加载到 dom 树，传入locator， 不代表元素一定可见
+
+        3 判断元素是否可见，传入 locator，可见代表元素非隐藏，宽高都不等于0
+
+        4 判断元素是否可见，传入 webelement
+
+        5 判断元素是否不存在于 dom 树或不可见
+
+        6 判断元素的 text 是否包含预期 value
+
+        7 判断元素的 value 属性是否包含预期 value
+
+        8 判断 frame 是否可以 switch 切换进入，True 则切换进入，反之 False
+
+        9 判断元素可见且可点击
+
+        10 判断元素不可点击
+
+        11 判断元素
         :param by:
         :param ConditionType:
-        :param until_or_not:
         :param args:
         :param kwargs:
         :return:
         """
-        loc = (by, kwargs.get("loc", ""))
-        value = kwargs.get("value", "")
+        loc: str = (by, kwargs.get("loc", ""))
+        value: str = kwargs.get("value", "")
+        until_or_not: bool = kwargs.get("until_or_not", True)
+        obviously_method = getattr(self.wait, "until") if until_or_not is True else getattr(self.wait, "until_not")
+        obviously_result = None
         match ConditionType:
             case 0:
-                if until_or_not is True:
-                    self.wait.until(EC.title_is(value), f"页面title与{value}不匹配!!!")
-                else:
-                    self.wait.until_not(EC.title_is(value), f"页面标题仍是{value}!!!")
+                assert_msg = f"页面title与{value}不匹配!!!" if until_or_not is True else f"页面title仍是{value}!!!"
+                obviously_result = obviously_method(EC.title_is(value), assert_msg)
             case 1:
-                if until_or_not is True:
-                    self.wait.until(EC.title_contains(value), f"页面title不包含{value}!!!")
-                else:
-                    self.wait.until_not(EC.title_contains(value), f"页面title仍包含{value}!!!")
+                assert_msg = f"页面title不包含{value}!!!" if until_or_not is True else f"页面title不包含{value}!!!"
+                obviously_result = obviously_method(EC.title_contains(value), assert_msg)
             case 2:
-                if until_or_not is True:
-                    self.wait.until()
-                else:
-                    self.wait.until_not()
+                assert_msg = f"页面不存在预期元素!!!" if until_or_not is True else f"页面仍存在预期元素!!!"
+                obviously_result = obviously_method(EC.presence_of_element_located(loc), assert_msg)
             case 3:
-                if until_or_not is True:
-                    self.wait.until()
-                else:
-                    self.wait.until_not()
+                assert_msg = f"预期元素在页面不可见!!!" if until_or_not is True else f"预期元素在页面仍可见!!!"
+                obviously_result = obviously_method(EC.visibility_of_element_located(loc), assert_msg)
             case 4:
-                if until_or_not is True:
-                    self.wait.until()
-                else:
-                    self.wait.until_not()
+                assert_msg = f"预期元素在页面未出现!!!" if until_or_not is True else f"预期元素在页面未消失!!!"
+                obviously_result = obviously_method(EC.visibility_of(self.locate(loc)), assert_msg)
             case 5:
                 if until_or_not is True:
                     self.wait.until()
                 else:
                     self.wait.until_not()
             case 6:
-                if until_or_not is True:
-                    self.wait.until(EC.text_to_be_present_in_element(loc, value), f"元素未包含文本{value}!!!")
-                else:
-                    self.wait.until_not()
+                assert_msg = f"元素未包含文本{value}!!!" if until_or_not is True else f"元素仍包含文本{value}!!!"
+                obviously_result = obviously_method(EC.text_to_be_present_in_element(loc, value), assert_msg)
+        return obviously_result
 
-    def set_obviously_wait(self, ConditionType, *args, implicitly_time=10, **kwargs):
+    def set_obviously_wait(self, ConditionType, *args, implicitly_time: float = 10.0, obviously_time: float = 20.0, **kwargs):
         """
         设置显示等待之前需要关闭全局隐式等待，完成之后再重新设置隐式等待
         显示等待条件, 不应该用数字代表条件，应改成条件简称
@@ -196,12 +211,14 @@ class BasePage:
         11 判断元素
         :return:
         """
+        self.wait = WebDriverWait(self.driver, obviously_time)
         try:
             self.set_implicitly_wait(0)
             self.wait_condition(ConditionType, *args, **kwargs)
         except WebDriverException as err:
             raise err
         finally:
+            self.wait = None
             self.set_implicitly_wait(implicitly_time)
 
     def set_implicitly_wait(self, implicitly_time=10):
@@ -241,17 +258,16 @@ class BasePage:
         self.action.move_to_element(self.locate(loc))
 
     def action_send_keys(self, keyBoard):
-
         match keyBoard:
-            case "selectAll":
+            case "SELECTALL":
                 self.action.send_keys(Keys.CONTROL, "a")
-            case "copy":
+            case "COPY":
                 self.action.send_keys(Keys.CONTROL, "c")
-            case "paste":
+            case "PASTE":
                 self.action.send_keys(Keys.CONTROL, "v")
-            case "delete":
+            case "DELETE":
                 self.action.send_keys(Keys.DELETE)
-            case "enter":
+            case "ENTER":
                 self.action.send_keys(Keys.ENTER)
             case _:
                 pass
@@ -490,8 +506,16 @@ class BasePage:
         sleep(1)
         allure.attach(self.get_screenshots_as_png(), png_name, allure.attachment_type.PNG)
 
-    def select_ComboBox(self, loc, index=None, value=None, text=None):
-        """下拉框选择"""
+    def select_ComboBox(self, loc: str, index: int=None, value: str=None, text: str=None):
+        """
+        下拉框选择
+
+        :param loc: select定位xpath
+        :param index: 下拉选项option下标
+        :param value: 下拉选项option的value
+        :param text: 下拉选项option的text
+        :return:
+        """
         self.select = Select(self.locate(loc))
         if index:
             self.select.select_by_index(index)

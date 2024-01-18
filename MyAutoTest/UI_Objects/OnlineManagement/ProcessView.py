@@ -55,7 +55,6 @@ class ProcessView_Page(BasePage):
 
             self.click_element("//*[@id='dpTitle']/div[4]/input")  # 点击年份框
             self.action_send_keys("delete")
-            # self.perform_actions()
             self.input_element("//*[@id='dpTitle']/div[4]/input", interval[0])  # 输入年份
             self.click_element("//*[@id='dpTitle']/div[3]/input")  # 点击月份框
             self.click_element(f"//*[@id='dpTitle']/div[3]/div/table/tbody//tr/td[text()='{interval[1]}']")  # 选择月份
