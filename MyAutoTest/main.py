@@ -3,9 +3,12 @@ import importlib
 import inspect
 import io
 import json
+import random
 import re
+import math
 from pathlib import Path
 from time import sleep
+
 
 import pyautogui
 
@@ -41,7 +44,7 @@ def image_to_base64_PIL(imagePath, save_format='png'):
     #     image_data_bytes = image_data.getvalue()
     #     image_encoded = base64.b64encode(image_data_bytes).decode('utf-8')
     # return image_encoded
-    with Image.open(image_path) as img:
+    with Image.open(imagePath) as img:
         output_buffer = io.BytesIO()
         img.save(output_buffer, format=save_format)
         byte_data = output_buffer.getvalue()
@@ -59,12 +62,32 @@ def base64_to_image_PIL(base64_str, img_path=None):
     return img
 
 
+def get_check_num(idCard: str):
+    a = [int(i) for i in list(idCard)]  # 17位本体
+    b = [int(math.pow(2, i - 1) % 11) for i in range(0, 17)]  # 加权因子
+    c = [a[i] * b[i] for i in range(0, 17)]
+    sum = 0
+    for index, i in enumerate(c):
+        sum += i
+    check_num = sum % 11
+    if check_num == 10:
+        check_num = "X"
+        return f"{idCard+check_num}"
+    # elif check_num == 10:
+    #     check_num = "0"
+    #     return f"{idCard + check_num}"
+    else:
+        check_num = str(check_num)
+        return f"{idCard + check_num}"
+
+
+
 if __name__ == '__main__':
     pass
-    image_path = r"C:\Users\EDY\Desktop\外国人永居证反面2.jpg"
-    image_base64 = image_to_base64_PIL(image_path)
-    print(image_base64)
+    # image_path = r"C:\Users\EDY\Desktop\外国人永居证反面2.jpg"
+    # image_base64 = image_to_base64_PIL(image_path)
+    # print(image_base64)
 
     # new_base64 = "data:image/jpg;base64," + image_base64
     # base64_to_image_PIL(new_base64, r"C:\Users\EDY\Desktop\test_pic_2.png")
-
+    print(get_check_num("94376019980305667"))

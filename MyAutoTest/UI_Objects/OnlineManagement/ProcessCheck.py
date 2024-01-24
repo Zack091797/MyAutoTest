@@ -59,9 +59,9 @@ class ProcessCheck_Page(BasePage):
         """搜索条件-业务类型"""
         self.select_ComboBox("//*[@id='businessNum']", text=businessNum)
 
-    def input_processStatus(self, processStatus):
+    def input_businessStatus(self, businessStatus):
         """搜索条件-业务状态"""
-        self.select_ComboBox("//*[@id='processStatus']", text=processStatus)
+        self.select_ComboBox("//*[@id='processStatus']", text=businessStatus)
 
     def input_sysChannel(self, sysChannel):
         """搜索条件-渠道"""
@@ -94,6 +94,10 @@ class ProcessCheck_Page(BasePage):
         """搜索条件-审核结果"""
         self.select_ComboBox("//*[@id='status']", text=checkStatus)
 
+    def input_auditStatus(self, auditStatus):
+        """搜索条件-见证结果"""
+        self.select_ComboBox("//*[@id='auditStatus']", text=auditStatus)
+
     def input_auditTimeInterval(self, *timeInterval):
         """搜索条件-见证时间区间"""
         timeType = ("auditStartTime", "auditEndTime")
@@ -113,7 +117,9 @@ class ProcessCheck_Page(BasePage):
             self.switch_default_content()
             self.iframe_into_Main()
 
-
+    def click_btnSubmit(self):
+        """点击按钮-高级搜索"""
+        self.click_element("//*[@id='btnSubmit']")
 
 
 

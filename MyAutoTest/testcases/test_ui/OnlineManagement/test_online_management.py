@@ -146,14 +146,47 @@ class TestOnlineManagement:
                 "//*[@id='contentTable']/tbody/tr/td[contains(text(), '审核中') or contains(text(), '未审核')]/following-sibling::th/a",
                 2)
 
+    # @pytest.mark.skip
     def test_check_processed_UnidirectionalVideo(self, get_page_dict, init_page):
-        """已办流程-单向视频(新)"""
+        """已办流程-双向视频(新)"""
         processCheck: ProcessCheck_Page = get_page_dict.get("processView", init_page(ProcessCheck_Page, "processCheck"))
         processCheck.choose_top_menu("流程审核")
-        processCheck.choose_left_menu("已办流程", "单向视频（新）")
+        processCheck.choose_left_menu("已办流程", "双向视频（新）")
 
-        processCheck.input_businessNum("全部")
-        processCheck.input_custOrgName("昌化路")
-        processCheck.input_timeInterval(("2024", "一月", "10"), ("2024", "一月", "17"))
-        processCheck.input_auditTimeInterval(("2024", "一月", "10"), ("2024", "一月", "17"))
+        processCheck.input_custOrgName("新昌路")
+        processCheck.input_custName("张天天")
+        processCheck.input_custMobile("13957594644")
+        processCheck.input_fundAcct("1653114382")
+        processCheck.input_businessStatus("流程结束(成功)")
+        processCheck.input_sysChannel("大赢家")
+        processCheck.input_timeInterval(("2024", "一月", "1"), ("2024", "一月", "20"))
+        processCheck.input_staffId("20230608")
+        processCheck.input_auditStatus("审核通过")
+        processCheck.input_auditTimeInterval(("2024", "一月", "1"), ("2024", "一月", "20"))
+        processCheck.click_btnSubmit()
+
+        sleep(3)
+
+        searchHasResult = processCheck.is_element_exist("//*[@id='contentTable']/tbody/tr[1]")
+        check.is_true(searchHasResult, "搜索存在至少一条结果")
+
+        firstResultProcessNum = processCheck.get_text("//*[@id='contentTable']/tbody/tr[1]/td[1]/a")  # 获取第一条结果的流水号
+        print(firstResultProcessNum)
+        processCheck.set_obviously_wait(3, loc="//*[@id='contentTable']/tbody/tr[1]/td[1]/a")
+        processCheck.click_element("//*[@id='contentTable']/tbody/tr[1]/td[1]/a")
+        # sleep(3)
+        while True:
+            processCheck.switch_default_content()
+            warning = processCheck.is_element_exist("//*[@id='jbox-state-state0']/div[2]/button")
+            if warning:
+                processCheck.js_click_element("//*[@id='jbox-state-state0']/div[2]/button")
+            else:
+                processCheck.iframe_into_Main()
+                break
+        processCheck.set_obviously_wait(3, loc = "/html/body/div[1]/h2")
+        detailsTitle = processCheck.get_text("/html/body/div[1]/h2")
+
+        check.is_in(firstResultProcessNum, detailsTitle, "详情标题包含目标流水号")
+
+
 
