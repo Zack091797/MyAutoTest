@@ -52,6 +52,12 @@ class BasePage:
             return self.driver.find_elements(*loc)[index]
 
     def is_element_exist(self, loc: str):
+        """
+        find_element判断元素是否存在, try执行成功返回True，失败报错则处理错误，返回False
+
+        :param loc:
+        :return:
+        """
         try:
             self.locate(loc)
             return True

@@ -1,34 +1,12 @@
 import base64
-import importlib
-import inspect
 import io
-import json
-import random
 import re
-import math
-from pathlib import Path
-from time import sleep
+import asyncio
+import time
 
-
-import pyautogui
-
-from Utils.LogConfig.LogConfig import logHelper
-from Utils.Tool.render_template_jinja2 import render_template_by_jinja2
-from Utils.Tool.yamlhelper import yamlHelper
-from selenium import webdriver
 from PIL import Image
-
-
-def all_functions():
-    """
-    读取 debugtalk 模块下的所有function，return一个内置function对象的dict
-
-    :return:
-    """
-    debug_module = importlib.import_module("debugtalk")
-    all_function = inspect.getmembers(debug_module, inspect.isfunction)
-    result = dict(all_function)
-    return result
+from playwright.async_api import async_playwright
+from playwright.sync_api import sync_playwright, expect, Playwright
 
 
 def image_to_base64_native(image_path):
@@ -38,12 +16,6 @@ def image_to_base64_native(image_path):
 
 
 def image_to_base64_PIL(imagePath, save_format='png'):
-    # with Image.open(imagePath) as image_file:
-    #     image_data = io.BytesIO()
-    #     image_file.save(image_data, format=save_format)
-    #     image_data_bytes = image_data.getvalue()
-    #     image_encoded = base64.b64encode(image_data_bytes).decode('utf-8')
-    # return image_encoded
     with Image.open(imagePath) as img:
         output_buffer = io.BytesIO()
         img.save(output_buffer, format=save_format)
@@ -62,32 +34,88 @@ def base64_to_image_PIL(base64_str, img_path=None):
     return img
 
 
-def get_check_num(idCard: str):
-    a = [int(i) for i in list(idCard)]  # 17位本体
-    b = [int(math.pow(2, i - 1) % 11) for i in range(0, 17)]  # 加权因子
-    c = [a[i] * b[i] for i in range(0, 17)]
-    sum = 0
-    for index, i in enumerate(c):
-        sum += i
-    check_num = sum % 11
-    if check_num == 10:
-        check_num = "X"
-        return f"{idCard+check_num}"
-    # elif check_num == 10:
-    #     check_num = "0"
-    #     return f"{idCard + check_num}"
-    else:
-        check_num = str(check_num)
-        return f"{idCard + check_num}"
+def run(playwright: Playwright) -> None:
+    browser = playwright.chromium.launch(headless=False)
+    context = browser.new_context()
+    page = context.new_page()
+    page.goto("https://www.baidu.com")
+    page.locator("#kw").fill("playwright")
+    # page.pause()  # 断点
+    page.get_by_role("button", name="百度一下").click()
+    page.wait_for_timeout(3000)
 
+    # ---------------------
+    context.close()
+    browser.close()
 
 
 if __name__ == '__main__':
     pass
-    # image_path = r"C:\Users\EDY\Desktop\外国人永居证反面2.jpg"
-    # image_base64 = image_to_base64_PIL(image_path)
-    # print(image_base64)
 
-    # new_base64 = "data:image/jpg;base64," + image_base64
-    # base64_to_image_PIL(new_base64, r"C:\Users\EDY\Desktop\test_pic_2.png")
-    print(get_check_num("94376019980305667"))
+    with sync_playwright() as playwright:
+        run(playwright)
+
+    # with sync_playwright() as play:
+    #     browser = play.chromium.launch(headless=False, slow_mo=500)
+    #     context = browser.new_context()
+    #
+    #     page1 = context.new_page()
+    #     page2 = context.new_page()
+    #
+    #     page1.goto("https://www.baidu.com")
+    #     # page2.goto("https://163.com")
+    #
+    #     page1.wait_for_timeout(5000)
+    #     page2.wait_for_timeout(3000)
+    #
+    #     page1.close()
+    #     page2.close()
+
+    # with sync_playwright() as play:
+    #     browser = play.chromium.launch(headless=False, slow_mo=500)
+    #     context = browser.new_context()
+    #     page = context.new_page()
+    #     page.goto("https://www.baidu.com")
+    #     print(page.title())
+    #     page.fill("#kw", "playwright")
+    #     page.wait_for_timeout(5000)
+    #     page.click("#su")
+    #     time.sleep(3)
+    #     page.close()
+    #
+    #     page.get_by_role()
+    #     page.locator().click()
+    #     expect().to_be_visible()
+    #
+    #     page.get_by_text()
+    #     page.locator()
+    #     page.frame_locator()
+    #     page.frame()
+    #     page.hover()
+    #     page.wait_for_load_state()
+    #     page.wait_for_timeout()
+    #     page.screenshot()
+    #     with page.expect_file_chooser() as efc_info:
+    #         pass
+    #
+    #     with context.expect_page() as cep_info:
+    #         pass
+    #
+    #     context.on()
+
+    # async def main():
+    #     async with async_playwright() as play:
+    #         browser = await play.chromium.launch(headless=False)
+    #         page = await browser.new_page()
+    #         page.get_by_role()
+    #         await page.goto("https://www.baidu.com")
+    #         print(await page.title())
+    #         await browser.close()
+    # asyncio.run(main())
+
+    # play = sync_playwright().start()
+    # browser = play.chromium.launch(headless=False)
+    # page = browser.new_page()
+    # page.goto("https://www.baidu.com")
+    # browser.close()
+    # play.stop()

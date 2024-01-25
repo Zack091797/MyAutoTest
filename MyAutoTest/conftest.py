@@ -3,7 +3,6 @@ import inspect
 
 import pytest
 from _pytest.config.argparsing import Parser
-
 from Config.ConfigHelper import ConfigHelper
 from Utils.LogConfig.LogConfig import logHelper
 from Utils.Tool.mysqlhelper import MySqlHelper
