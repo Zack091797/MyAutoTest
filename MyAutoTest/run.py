@@ -6,7 +6,8 @@ import pytest
 
 if __name__ == "__main__":
     # pytest.main(["./testcases/test_api/test_company_api.py", "--envCode", "uat"])
-    pytest.main(["./testcases/test_ui/OnlineManagement/test_online_management.py", "--envCode", "uat"])
+    # pytest.main(["./testcases/test_ui/selenium_case/OnlineManagement/test_online_management.py", "--envCode", "uat"])
+    pytest.main(["./testcases/test_ui/playwright_case/test_playwright_demo.py", "--SyncOrAsync", "sync"])
     # pytest.main(["./testcases/test_ui/test_ui_demo.py", "--envCode", "dev"])
     # pytest.main(["./testcases/test_api/test_swhy_message.py"])
 
