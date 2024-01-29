@@ -33,6 +33,9 @@ class ApiCase:
                        f"{'' if jsons is None else f'请求数据json: {request_data_print(jsons)}'}"
                        f"{'' if data is None else f'请求数据data: {request_data_print(data)}'}"
                        f"{'' if file is None else f'请求数据file: {request_data_print(file)}'}"
+                       f"{'' if cookie is None else f'请求数据cookie: {request_data_print(cookie)}'}"
+                       f"{'' if hook is None else f'请求hook: {request_data_print(hook)}'}"
+                       f"{'' if auth is None else f'请求auth: {request_data_print(auth)}'}"
                        f"请求断言: {validate}")
         request_data = {}
         if url:
@@ -67,23 +70,25 @@ class ApiCase:
             pass
 
     @staticmethod
-    def extract_resp(expr: str, src: [dict, str], ex_type: str = "jsonpath"):
+    def extract_resp(expr: str, src: [dict, str], ext_type: str = "jsonpath"):
         """处理提取响应body"""
         value = None
         try:
-            match ex_type:
+            match ext_type:
                 case "jsonpath":
                     value = jsonpath.jsonpath(src, expr)
                 case "regular":
                     value = re.compile(expr).findall(src)
                 case _:
-                    logHelper.error(f"未定义的提取方式->{ex_type}, 请检查...")
+                    logHelper.error(f"未定义的提取方式->{ext_type}, 请检查...")
         except IndexError as err:
             logHelper.error(f"提取表达式数组下标越界, 请检查... -> {err}")
         except TypeError as err:
             logHelper.error(f"提取表达式数据类型错误, 请检查... -> {err}")
         except ValueError as err:
             logHelper.error(f"提取表达式数据错误, 请检查... -> {err}")
+        except Exception as err:
+            logHelper.error(f"提取响应数据异常, 请检查... -> {err}")
         finally:
             if value is False:
                 value = None

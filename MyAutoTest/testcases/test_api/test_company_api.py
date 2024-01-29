@@ -17,7 +17,7 @@ class TestCompanyApi(ApiCase):
         resp = req.request(**request_data)
         print(resp.text)
         code = self.extract_resp(r"$.code", resp.json())
-        msg = self.extract_resp(r'"msg":"(.*?)"', resp.text, ex_type="regular")
+        msg = self.extract_resp(r'"msg":"(.*?)"', resp.text, ext_type="regular")
         accessToken = self.extract_resp(r"$..accessToken", resp.json())
         # self.check_validate()
         # self.check_validate()

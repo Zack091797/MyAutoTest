@@ -15,8 +15,8 @@ def init_browserContext(request):
     browserType = request.config.getoption("--SyncOrAsync")
     if browserType == "sync":
         play = sync_playwright().start()
-        browser = play.chromium.launch(headless=False)
-        context = browser.new_context()
+        browser = play.chromium.launch(headless=False, args=['--start-maximized'], channel= "chrome")
+        context = browser.new_context(ignore_https_errors=True, no_viewport=True)
         return context
     elif browserType == "async":
         async def get_browserContext():
